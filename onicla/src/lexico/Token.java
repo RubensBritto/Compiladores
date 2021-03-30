@@ -1,7 +1,5 @@
 package lexico;
 
-import lexico.TipoToken;
-
 public class Token {
     public TipoToken nome;
     public String lemexa;
