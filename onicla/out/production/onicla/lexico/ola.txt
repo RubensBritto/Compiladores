@@ -1,0 +1,5 @@
+Function Integer Main ( ) BEGIN
+	Print(“Hello World!!”);
+
+	Refound;
+END
