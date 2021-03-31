@@ -22,7 +22,7 @@ public class LeitorDeArquivoText {
         }
 
     }
-    private void inicializarBuffer(){
+    private void inicializarBuffer() {
         bufferAtual = 2;
         initLexema = 0;
         lexema = "";
@@ -31,17 +31,17 @@ public class LeitorDeArquivoText {
         reloadBuffer1();
     }
 
-    private void incrementarPonteiro(){
+    private void incrementarPonteiro() {
         ponteiro++;
-        if (ponteiro == TAMANHO_BUFFER){
+        if (ponteiro == TAMANHO_BUFFER) {
             reloadBuffer2();
-        }else if(ponteiro == TAMANHO_BUFFER * 2){
+        } else if(ponteiro == TAMANHO_BUFFER * 2) {
             reloadBuffer1();
             ponteiro = 0;
         }
     }
 
-    private void reloadBuffer1(){
+    private void reloadBuffer1() {
         if(bufferAtual == 2) {
             bufferAtual = 1;
             try{
@@ -56,9 +56,9 @@ public class LeitorDeArquivoText {
                 e.printStackTrace();
             }
         }
-
     }
-    private void reloadBuffer2(){
+
+    private void reloadBuffer2() {
         if (bufferAtual == 1) {
            bufferAtual = 2;
             try {
@@ -76,7 +76,7 @@ public class LeitorDeArquivoText {
         }
     }
 
-    private int readCaracterBuffer(){
+    private int readCaracterBuffer() {
         int ret = bufferReader[ponteiro];
         incrementarPonteiro();
         return ret;
@@ -87,19 +87,19 @@ public class LeitorDeArquivoText {
         return c;
     }
 
-    public void rectroceder(){
+    public void rectroceder() {
         ponteiro--;
-        lexema = lexema.substring(0,lexema.length()-1);  //subtrai do lexema
+        lexema = lexema.substring(0, lexema.length()-1);  //subtrai do lexema
         if(ponteiro < 0){
             ponteiro = TAMANHO_BUFFER * 2 - 1;
         }
     }
 
-    public void zerar(){
+    public void zerar() {
         ponteiro = initLexema;
         lexema = "";
     }
-    public void confirmar(){
+    public void confirmar() {
         initLexema = ponteiro;
         lexema = "";
     }

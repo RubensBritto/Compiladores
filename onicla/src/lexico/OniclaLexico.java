@@ -1,15 +1,13 @@
 package lexico;
 
-import java.io.FileNotFoundException;
-
 public class OniclaLexico {
 
     LeitorDeArquivoText ldat;
-    public OniclaLexico(String archive){
+    public OniclaLexico(String archive) {
         ldat = new LeitorDeArquivoText(archive);
     }
 
-    public Token proxToken(){
+    public Token proxToken() {
         Token proximo = null;
         spaceAndComments();
         ldat.confirmar();
@@ -77,12 +75,19 @@ public class OniclaLexico {
             return proximo;
         }
 
+        proximo = cadeiaCharacter();
+        if (proximo == null){
+            ldat.zerar();
+        }else {
+            ldat.confirmar();
+            return proximo;
+        }
         System.err.println("Erro léxico!");
         System.err.println(ldat.toString());
         return null;
     }
 
-    private Token operadoresAritmetico(){
+    private Token operadoresAritmetico() {
         int caracterLido = ldat.lerProxCaractere();
         char c = (char) caracterLido;
         if(c == '*') {
@@ -165,26 +170,26 @@ public class OniclaLexico {
         return null;
     }
 
-    private Token numeros(){
+    private Token numeros() {
         //falta olhar o sinal
         int estado = 1;
         while (true){
             char c = (char) ldat.lerProxCaractere();
-            if(estado == 1){
-                if (Character.isDigit(c)){
+            if(estado == 1) {
+                if (Character.isDigit(c)) {
                     estado = 2;
-                }else{
+                } else{
                     return null;
                 }
-            } else if(estado == 2){
+            } else if(estado == 2) {
                 if(c == '.'){
                     c = (char) ldat.lerProxCaractere();
                     if (Character.isDigit(c)){
                         estado = 3;
-                    }else{
+                    } else {
                         return null;
                     }
-                }else if(!Character.isDigit(c)){
+                } else if(!Character.isDigit(c)){
                     ldat.rectroceder();
                     return new Token(TipoToken.CTE_INT, ldat.getLexema());
                 }
@@ -215,29 +220,49 @@ public class OniclaLexico {
             }
         }
     }
-/*
-    private Token cadeiaCharacter(){
-        //COLOCA PARA RECONHECER CHAR
 
+    private Token cadeiaCharacter(){
+        int estado = 1;
+        int cont = 0;
+        while (true) {
+            char c = (char) ldat.lerProxCaractere();
+            if (estado == 1) {
+                if (Character.isWhitespace(c) || c == ' ') {
+                    estado = 1;
+                } else if (c == '\'') {
+                    cont++;
+                    estado = 2;
+                } else {
+                    return null;
+                }
+            } else if(estado == 2){
+                if(Character.isWhitespace(c) || c == ' ') {
+                    cont--;
+                } else if(cont == 2 && c == '\''){
+                    return new Token(TipoToken.CTE_CHAR, ldat.getLexema());
+                } else if (c == '\'') {
+                    return new Token(TipoToken.CTE_CAD_CHARAC, ldat.getLexema());
+                }
+                cont++;
+            }
+        }
     }
 
- */
-
-    private void spaceAndComments(){
+    private void spaceAndComments() {
         int estado = 1;
         while (true) {
             char c = (char) ldat.lerProxCaractere();
             if(estado == 1){
                 if(Character.isWhitespace(c) || c == ' ') {
                     estado = 2;
-                }else if(c == '#') {
+                } else if(c == '#') {
                     estado = 3;
-                }else {
+                } else{
                     ldat.rectroceder();
                     return;
                 }
             } else if(estado == 2) {
-                if(c == '#'){
+                if(c == '#') {
                     estado = 3;
                 } else if(!(Character.isWhitespace(c) || c == ' ')) {
                     ldat.rectroceder();
@@ -245,19 +270,20 @@ public class OniclaLexico {
                 }
             } else if(estado == 3){
                 if (c == '\n'){
+                    ldat.lerProxCaractere();
                     return;
                 }
             }
         }
     }
 
-    private Token keyWords(){
-        while (true){
+    private Token keyWords() {
+        while (true) {
             char c = (char) ldat.lerProxCaractere();
-            if(!Character.isLetter(c)){
+            if(!Character.isLetter(c)) {
                 ldat.rectroceder();
                 String lexema = ldat.getLexema();
-                if(lexema.equals("And")){
+                if(lexema.equals("And")) {
                     return new Token(TipoToken.PR_AND, lexema);
                 } else if (lexema.equals("Or")) {
                     return new Token(TipoToken.PR_OR, lexema);
@@ -310,9 +336,9 @@ public class OniclaLexico {
         }
     }
 
-    private Token endOfFiel(){
+    private Token endOfFiel() {
         int caracterLido = ldat.lerProxCaractere();
-        if(caracterLido == -1){
+        if(caracterLido == -1) {
             return new Token(TipoToken.FIM, "FIM");
         } else {
             return null;
