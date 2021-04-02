@@ -2,230 +2,183 @@ package lexico;
 
 public class OniclaLexico {
 
-    LeitorDeArquivoText ldat;
-    public OniclaLexico(String archive) {
-        ldat = new LeitorDeArquivoText(archive);
+    private String name = "";
+    private int state;
+
+    public int getState() {
+        return state;
+    }
+    public void setState(int state) {
+        this.state = state;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(char c) {
+        this.name += c;
+    }
+    public void clearName(){
+        this.name = "";
     }
 
-    public Token proxToken() {
-        Token proximo = null;
-        spaceAndComments();
-        ldat.confirmar();
-
-        proximo = endOfFiel();
-        if(proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-
-        proximo = keyWords();
-        if(proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-
-        proximo = identificadores();
-        if (proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-
-        proximo = numeros();
-        if (proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-
-        proximo = operadoresAritmetico();
-        if (proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-        proximo = operadoresRelacionais();
-        if (proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-
-        proximo = operadoresBooleanos();
-        if (proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-
-        proximo = delimitador();
-        if (proximo == null) {
-            ldat.zerar();
-        } else {
-            ldat.confirmar();
-            return proximo;
-        }
-
-        proximo = cadeiaCharacter();
-        if (proximo == null){
-            ldat.zerar();
-        }else {
-            ldat.confirmar();
-            return proximo;
-        }
-        System.err.println("Erro léxico!");
-        System.err.println(ldat.toString());
-        return null;
-    }
-
-    private Token operadoresAritmetico() {
-        int caracterLido = ldat.lerProxCaractere();
-        char c = (char) caracterLido;
-        if(c == '*') {
-            return new Token(TipoToken.OP_MULT, "*");
-        } else if(c == '/') {
-            return new Token(TipoToken.OP_DIV, "/");
-        } else if(c == '+') {
-            return new Token(TipoToken.OP_AD, "+");
-        } else if(c == '-') {
-            return new Token(TipoToken.OP_SUB, "-");
-        } else if(c == '%') {
-            return new Token(TipoToken.OP_RES, "%");
-        } else {
-            return null;
-        }
-    }
-
-    private Token delimitador() {
-        int caracterLido = ldat.lerProxCaractere();
-        char c = (char) caracterLido;
-        if (c == ',') {
-            return new Token(TipoToken.SEP, ",");
-        } else if(c == '(') {
-            return new Token(TipoToken.AB_PAR, "(");
-        } else if(c == ')') {
-            return new Token(TipoToken.FEC_PAR, ")");
-        }  else if(c == '[') {
-            return new Token(TipoToken.AB_COL, "[");
-        } else if(c == ']') {
-            return new Token(TipoToken.FEC_COL, "]");
-        } else if(c == ';') {
-            return new Token(TipoToken.TERMINAL, ";");
-        } else {
-            return null;
-        }
-    }
-    private Token operadoresRelacionais() {
-        int caracterLido = ldat.lerProxCaractere();
-        char c = (char) caracterLido;
-        if(c == '<') {
-            c = (char) ldat.lerProxCaractere();
-            if(c == '=') {
-                return new Token(TipoToken.OP_LESSEQ, "<=");
-            } else {
-                ldat.rectroceder();
-                return new Token(TipoToken.OP_LESS, "<");
-            }
-        } else if(c == '>') {
-            c = (char) ldat.lerProxCaractere();
-            if(c == '=') {
-                return new Token(TipoToken.OP_GREATEREQ, ">=");
-            } else {
-                ldat.rectroceder();
-                return new Token(TipoToken.OP_GREATER, ">");
-            }
-        } else {
-            return null;
-        }
-    }
-
-    private Token operadoresBooleanos(){
-        int caracterLido = ldat.lerProxCaractere();
-        char c = (char) caracterLido;
-        if(c == '=') {
-            c = (char) ldat.lerProxCaractere();
-            if(c == '=') {
-                return new Token(TipoToken.OP_REL, "==");
-            } else if(c == '/') {
-                c = (char) ldat.lerProxCaractere();
-                if(c == '=') {
-                    return new Token(TipoToken.OP_REL, "=/=");
+    public void proxToken(String linha) {
+        int j;
+        char[] d = new char[1000];
+        d = linha.toCharArray();
+        setState(1);
+        for(int i = 0; i < d.length; i++) {
+            if(Character.isWhitespace(d[i]))
+                i++;
+            if (Character.isUpperCase(d[0]) && Character.isLetter(d[i]))
+                keyWords(d[i]);
+            if (Character.isLowerCase(d[0]) && Character.isLetterOrDigit(d[i])) {
+                if(!Character.isLetterOrDigit(d[i+1])) {
+                    setState(2);
                 }
-            } else {
-                ldat.rectroceder();
-                return new Token(TipoToken.OP_ATR, "=");
+                identificadores(d[i]);
             }
-        } else if(c == '!') {
-            return new Token(TipoToken.OP_NOT, "!");
+            if (Character.isDigit(d[i]))
+                if(!);
+                numeros(d[i]);
+            if (d[i] == '*' || d[i] == '/' || d[i] == '-' || d[i] == '+' || d[i] == '%')
+                operadoresAritmetico(d[i]);
+            if (d[i] == ',' || d[i] == '(' || d[i] == ')' || d[i] == '[' || d[i] == ']' || d[i] == ';')
+                delimitador(d[i]);
+            if (d[i] == '>' || d[i] == '<'){
+                if(d[i] == '>' && d[i+1] == '=') {
+                    i++;
+                    operadoresRelacionais(1);
+                }
+                else if(d[i] == '<' && d[i+1] == '=') {
+                    i++;
+                    operadoresRelacionais(2);
+                }
+                else if(d[i] == '>')
+                    operadoresRelacionais(3);
+                else
+                    operadoresRelacionais(4);
+            }
+            if (d[i] == '=' || d[i] == '!') {
+                if(d[i+1] == '=') {
+                    i++;
+                    operadoresBooleanos(1);
+                } else if(d[i+1] == '/') {
+                    i += 2;
+                    operadoresBooleanos(2);
+                } else if(d[i] == '=') {
+                    operadoresBooleanos(3);
+                } else {
+                    operadoresBooleanos(4);
+                }
+            }
+            if (d[i] == '\'')
+                cadeiaCharacter(d[i]);
+            if (d[i] == '\n' || d[i] == '\t' || d[i] == '\r' || Character.isWhitespace(d[i]) || d[i] == '#')
+                spaceAndComments(d[i]);
+        }
+        return;
+    }
+
+    private Token operadoresAritmetico(char c) {
+        if(c == '*') {
+            System.out.println(new Token(TipoToken.OP_MULT, "*"));
+        } else if(c == '/') {
+            System.out.println(new Token(TipoToken.OP_DIV, "/"));
+        } else if(c == '+') {
+            System.out.println(new Token(TipoToken.OP_AD, "+"));
+        } else if(c == '-') {
+            System.out.println(new Token(TipoToken.OP_SUB, "-"));
+        } else if(c == '%') {
+            System.out.println(new Token(TipoToken.OP_RES, "%"));
+        } else {
+            return null;
+        }
+    }
+
+    private Token delimitador(char c) {
+        if (c == ',') {
+            System.out.println(new Token(TipoToken.SEP, ","));
+        } else if(c == '(') {
+            System.out.println(new Token(TipoToken.AB_PAR, "("));
+        } else if(c == ')') {
+            System.out.println(new Token(TipoToken.FEC_PAR, ")"));
+        }  else if(c == '[') {
+            System.out.println(new Token(TipoToken.AB_COL, "["));
+        } else if(c == ']') {
+            System.out.println(new Token(TipoToken.FEC_COL, "]"));
+        } else if(c == ';') {
+           System.out.println( new Token(TipoToken.TERMINAL, ";"));
         }
         return null;
     }
 
-    private Token numeros() {
+    private Token operadoresRelacionais(int c) {
+        if(c == 1) {
+            System.out.println(new Token(TipoToken.OP_GREATEREQ, ">="));
+        } else if(c == 2) {
+            System.out.println(new Token(TipoToken.OP_LESSEQ, "<="));
+        } else if(c == 3) {
+            System.out.println(new Token(TipoToken.OP_GREATER, ">"));
+        } else {
+            System.out.println(new Token(TipoToken.OP_LESS, "<"));
+        }
+    }
+
+    private Token operadoresBooleanos(int c){
+        if(c == 1) {
+            System.out.println(new Token(TipoToken.OP_REL, "=="));
+        } else if(c == 2) {
+            System.out.println(new Token(TipoToken.OP_REL, "=/="));
+        } else if(c == 3) {
+            System.out.println(new Token(TipoToken.OP_ATR, "="));
+        } else {
+            System.out.println(new Token(TipoToken.OP_NOT, "!"));
+        }
+    }
+
+    private Token numeros(char c) {
         //falta olhar o sinal
         int estado = 1;
-        while (true){
-            char c = (char) ldat.lerProxCaractere();
+        while(true) {
             if(estado == 1) {
                 if (Character.isDigit(c)) {
-                    estado = 2;
-                } else{
-                    return null;
-                }
-            } else if(estado == 2) {
-                if(c == '.'){
-                    c = (char) ldat.lerProxCaractere();
-                    if (Character.isDigit(c)){
-                        estado = 3;
-                    } else {
-                        return null;
-                    }
-                } else if(!Character.isDigit(c)){
-                    ldat.rectroceder();
-                    return new Token(TipoToken.CTE_INT, ldat.getLexema());
-                }
-            } else if(estado == 3){
-                if (!Character.isDigit(c)){
-                    ldat.rectroceder();
-                    return new Token(TipoToken.CTE_FLOAT, ldat.getLexema());
-                }
-            }
-        }
-    }
-
-    private Token identificadores(){
-        int estado = 1;
-        while (true){
-            char c = (char) ldat.lerProxCaractere();
-            if (estado == 1) {
-                if(Character.isLowerCase(c)) {
                     estado = 2;
                 } else {
                     return null;
                 }
             } else if(estado == 2) {
-                if (!Character.isLetterOrDigit(c)) {
-                    ldat.rectroceder();
-                    return new Token(TipoToken.ID, ldat.getLexema());
+                if(c == '.'){
+                    if (Character.isDigit(c)){
+                        estado = 3;
+                    } else {
+                        return null;
+                    }
+                } else if(!Character.isDigit(c)) {
+                    return new Token(TipoToken.CTE_INT, getName());
+                }
+            } else if(estado == 3) {
+                if(!Character.isDigit(c)) {
+                    return new Token(TipoToken.CTE_FLOAT, getName());
                 }
             }
         }
     }
 
-    private Token cadeiaCharacter(){
+    private Token identificadores(char c){
+        if(getState() == 1) {
+            setName(c);
+        } else if(getState() == 2) {
+            setName(c);
+            System.out.println(new Token(TipoToken.ID,getName()));
+            clearName();
+        }
+        return null;
+    }
+
+    private Token cadeiaCharacter(char c){
         int estado = 1;
         int cont = 0;
         while (true) {
-            char c = (char) ldat.lerProxCaractere();
             if (estado == 1) {
                 if (Character.isWhitespace(c) || c == ' ') {
                     estado = 1;
@@ -239,50 +192,46 @@ public class OniclaLexico {
                 if(Character.isWhitespace(c) || c == ' ') {
                     cont--;
                 } else if(cont == 2 && c == '\''){
-                    return new Token(TipoToken.CTE_CHAR, ldat.getLexema());
+                    return new Token(TipoToken.CTE_CHAR, getName());
                 } else if (c == '\'') {
-                    return new Token(TipoToken.CTE_CAD_CHARAC, ldat.getLexema());
+                    return new Token(TipoToken.CTE_CAD_CHARAC, getName());
                 }
                 cont++;
             }
         }
     }
 
-    private void spaceAndComments() {
+    private void spaceAndComments(char c) {
         int estado = 1;
         while (true) {
-            char c = (char) ldat.lerProxCaractere();
             if(estado == 1){
                 if(Character.isWhitespace(c) || c == ' ') {
                     estado = 2;
                 } else if(c == '#') {
                     estado = 3;
                 } else{
-                    ldat.rectroceder();
                     return;
                 }
             } else if(estado == 2) {
                 if(c == '#') {
                     estado = 3;
                 } else if(!(Character.isWhitespace(c) || c == ' ')) {
-                    ldat.rectroceder();
                     return;
                 }
             } else if(estado == 3){
                 if (c == '\n'){
-                    ldat.lerProxCaractere();
                     return;
                 }
             }
         }
     }
 
-    private Token keyWords() {
+    private Token keyWords(char c) {
+        //String lexema += c
         while (true) {
-            char c = (char) ldat.lerProxCaractere();
+            //char c = (char) ldat.lerProxCaractere();
             if(!Character.isLetter(c)) {
-                ldat.rectroceder();
-                String lexema = ldat.getLexema();
+                String lexema =getName();
                 if(lexema.equals("And")) {
                     return new Token(TipoToken.PR_AND, lexema);
                 } else if (lexema.equals("Or")) {
@@ -333,15 +282,6 @@ public class OniclaLexico {
                     return null;
                 }
             }
-        }
-    }
-
-    private Token endOfFiel() {
-        int caracterLido = ldat.lerProxCaractere();
-        if(caracterLido == -1) {
-            return new Token(TipoToken.FIM, "FIM");
-        } else {
-            return null;
         }
     }
 }

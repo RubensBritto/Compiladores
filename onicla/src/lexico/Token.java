@@ -2,15 +2,18 @@ package lexico;
 
 public class Token {
     public TipoToken nome;
-    public String lemexa;
+    public String lexema;
 
-    public Token(TipoToken nome, String lemexa) {
+    public Token(TipoToken nome, String lexema) {
         this.nome = nome;
-        this.lemexa = lemexa;
+        this.lexema = lexema;
     }
 
     @Override
     public String toString() {
-        return "<"+nome+","+lemexa+">";
+        return "Token{" +
+                "nome=" + nome +
+                ", lexema='" + lexema + '\'' +
+                '}';
     }
 }

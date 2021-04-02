@@ -1,12 +1,3 @@
-BEGIN
-    +
-    -
-    /
-    *
-oi
-#NDADA
-	Print( 'Hello       World');
-	'a '
-	13.41
-	Refound;
-END
+avava;))((
+;;
+)))
