@@ -1,5 +1,7 @@
 package lexico;
 
+import java.nio.charset.Charset;
+
 public class OniclaLexico {
 
     private String name = "";
@@ -22,35 +24,37 @@ public class OniclaLexico {
     }
 
     public void proxToken(String linha) {
-        int j;
         char[] d = new char[1000];
         d = linha.toCharArray();
         setState(1);
         for(int i = 0; i < d.length; i++) {
             if(Character.isWhitespace(d[i]))
                 i++;
-            if(Character.isUpperCase(d[0]) && Character.isLetter(d[i]))
+            else if(Character.isUpperCase(d[0]) && Character.isLetter(d[i]))
                 keyWords(d[i]);
-            if(Character.isLowerCase(d[0]) && Character.isLetterOrDigit(d[i])) {
+            else if(Character.isLowerCase(d[0]) && Character.isLetterOrDigit(d[i])) {
                 if(!Character.isLetterOrDigit(d[i+1])) {
                     setState(2);
                 }
                 identificadores(d[i]);
             }
-            if(Character.isDigit(d[i]) || (d[i] == '.' && Character.isDigit(d[i+1]))) {
-                if (d[i] == '.')
+            else if(Character.isDigit(d[i]) || (d[i] == '.' && Character.isDigit(d[i+1]))) {
+                if (d[i] == '.') {
                     setState(3);
-                if (d[i + 1] == ';' && getState() == 3)
+                }
+                if (!Character.isDigit(d[i + 1]) && d[i] != '.' && getState() == 3) {
                     setState(4);
-                else if (d[i + 1] == ';' && getState() == 1)
+                }
+                else if (!Character.isDigit(d[i + 1]) && d[i + 1] != '.' && getState() == 1) {
                     setState(2);
+                }
                 numeros(d[i]);
             }
-            if(d[i] == '*' || d[i] == '/' || d[i] == '-' || d[i] == '+' || d[i] == '%')
+            else if(d[i] == '*' || d[i] == '/' || d[i] == '-' || d[i] == '+' || d[i] == '%')
                 operadoresAritmetico(d[i]);
-            if(d[i] == ',' || d[i] == '(' || d[i] == ')' || d[i] == '[' || d[i] == ']' || d[i] == ';')
+            else if(d[i] == ',' || d[i] == '(' || d[i] == ')' || d[i] == '[' || d[i] == ']' || d[i] == ';')
                 delimitador(d[i]);
-            if(d[i] == '>' || d[i] == '<'){
+            else if(d[i] == '>' || d[i] == '<'){
                 if(d[i] == '>' && d[i+1] == '=') {
                     i++;
                     operadoresRelacionais(1);
@@ -64,22 +68,30 @@ public class OniclaLexico {
                 else
                     operadoresRelacionais(4);
             }
-            if (d[i] == '=' || d[i] == '!') {
-                if(d[i+1] == '=') {
-                    i++;
-                    operadoresBooleanos(1);
-                } else if(d[i+1] == '/') {
-                    i += 2;
-                    operadoresBooleanos(2);
-                } else if(d[i] == '=') {
-                    operadoresBooleanos(3);
-                } else {
-                    operadoresBooleanos(4);
+            else if (d[i] == '=' || d[i] == '!') {
+                try {
+                    if (d[i] == '=' && d[i + 1] == '=') {
+                        i++;
+                        operadoresBooleanos(1);
+                    } else if (d[i] == '=' && d[i + 1] == '/' && d[i + 2] == '=') {
+                        i += 2;
+                        operadoresBooleanos(2);
+                    } else if (d[i] == '=') {
+                        operadoresBooleanos(3);
+                    } else if (d[i] == '!') {
+                        operadoresBooleanos(4);
+                    }
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    if (d[i] == '=') {
+                        operadoresBooleanos(3);
+                    } else if (d[i] == '!') {
+                        operadoresBooleanos(4);
+                    }
                 }
             }
-            if (d[i] == '\'')
+            else if (d[i] == '\'')
                 cadeiaCharacter(d[i]);
-            if (d[i] == '\n' || d[i] == '\t' || d[i] == '\r' || Character.isWhitespace(d[i]) || d[i] == '#')
+            else if (d[i] == '\n' || d[i] == '\t' || d[i] == '\r' || Character.isWhitespace(d[i]) || d[i] == '#')
                 spaceAndComments(d[i]);
         }
         return;
