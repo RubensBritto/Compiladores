@@ -29,22 +29,28 @@ public class OniclaLexico {
         for(int i = 0; i < d.length; i++) {
             if(Character.isWhitespace(d[i]))
                 i++;
-            if (Character.isUpperCase(d[0]) && Character.isLetter(d[i]))
+            if(Character.isUpperCase(d[0]) && Character.isLetter(d[i]))
                 keyWords(d[i]);
-            if (Character.isLowerCase(d[0]) && Character.isLetterOrDigit(d[i])) {
+            if(Character.isLowerCase(d[0]) && Character.isLetterOrDigit(d[i])) {
                 if(!Character.isLetterOrDigit(d[i+1])) {
                     setState(2);
                 }
                 identificadores(d[i]);
             }
-            if (Character.isDigit(d[i]))
-                if(!);
+            if(Character.isDigit(d[i]) || (d[i] == '.' && Character.isDigit(d[i+1]))) {
+                if (d[i] == '.')
+                    setState(3);
+                if (d[i + 1] == ';' && getState() == 3)
+                    setState(4);
+                else if (d[i + 1] == ';' && getState() == 1)
+                    setState(2);
                 numeros(d[i]);
-            if (d[i] == '*' || d[i] == '/' || d[i] == '-' || d[i] == '+' || d[i] == '%')
+            }
+            if(d[i] == '*' || d[i] == '/' || d[i] == '-' || d[i] == '+' || d[i] == '%')
                 operadoresAritmetico(d[i]);
-            if (d[i] == ',' || d[i] == '(' || d[i] == ')' || d[i] == '[' || d[i] == ']' || d[i] == ';')
+            if(d[i] == ',' || d[i] == '(' || d[i] == ')' || d[i] == '[' || d[i] == ']' || d[i] == ';')
                 delimitador(d[i]);
-            if (d[i] == '>' || d[i] == '<'){
+            if(d[i] == '>' || d[i] == '<'){
                 if(d[i] == '>' && d[i+1] == '=') {
                     i++;
                     operadoresRelacionais(1);
@@ -90,9 +96,8 @@ public class OniclaLexico {
             System.out.println(new Token(TipoToken.OP_SUB, "-"));
         } else if(c == '%') {
             System.out.println(new Token(TipoToken.OP_RES, "%"));
-        } else {
-            return null;
         }
+        return null;
     }
 
     private Token delimitador(char c) {
@@ -122,6 +127,7 @@ public class OniclaLexico {
         } else {
             System.out.println(new Token(TipoToken.OP_LESS, "<"));
         }
+        return null;
     }
 
     private Token operadoresBooleanos(int c){
@@ -134,34 +140,27 @@ public class OniclaLexico {
         } else {
             System.out.println(new Token(TipoToken.OP_NOT, "!"));
         }
+        return null;
     }
 
     private Token numeros(char c) {
         //falta olhar o sinal
-        int estado = 1;
-        while(true) {
-            if(estado == 1) {
-                if (Character.isDigit(c)) {
-                    estado = 2;
-                } else {
-                    return null;
-                }
-            } else if(estado == 2) {
-                if(c == '.'){
-                    if (Character.isDigit(c)){
-                        estado = 3;
-                    } else {
-                        return null;
-                    }
-                } else if(!Character.isDigit(c)) {
-                    return new Token(TipoToken.CTE_INT, getName());
-                }
-            } else if(estado == 3) {
-                if(!Character.isDigit(c)) {
-                    return new Token(TipoToken.CTE_FLOAT, getName());
-                }
-            }
+        if(getState() == 1) {
+            setName(c);
+        } else if(getState() == 2) {
+            setName(c);
+            System.out.println(new Token(TipoToken.CTE_INT, getName()));
+            clearName();
+            setState(1);
+        } else if(getState() == 3) {
+            setName(c);
+        } else if(getState() == 4) {
+            setName(c);
+            System.out.println(new Token(TipoToken.CTE_FLOAT, getName()));
+            clearName();
+            setState(1);
         }
+        return null;
     }
 
     private Token identificadores(char c){
@@ -171,6 +170,7 @@ public class OniclaLexico {
             setName(c);
             System.out.println(new Token(TipoToken.ID,getName()));
             clearName();
+            setState(1);
         }
         return null;
     }
