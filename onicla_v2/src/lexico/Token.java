@@ -11,9 +11,9 @@ public class Token {
 
     @Override
     public String toString() {
-        return "Token{" +
-                "nome=" + nome +
-                ", lexema='" + lexema + '\'' +
+        return "Token {" +
+                "nome = " + nome +
+                ", lexema = '" + lexema + '\'' +
                 '}';
     }
 }

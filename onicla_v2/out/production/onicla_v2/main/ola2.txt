@@ -1,0 +1,10 @@
+    +
+    -
+    /
+    *
+oi;
+	Print( 'Hello  World');
+	'a '
+	13.41
+	Refound;
+END

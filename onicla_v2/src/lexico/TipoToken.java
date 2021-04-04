@@ -1,7 +1,7 @@
 package lexico;
 
 public enum TipoToken {
-    FIM,
+    EOF,
     ID,
 
     CTE_FLOAT, CTE_INT, CTE_CHAR, CTE_CAD_CHARAC,
