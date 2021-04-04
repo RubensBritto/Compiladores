@@ -14,7 +14,7 @@ public class OniclaLexico {
     public OniclaLexico(String arquivo) {
         try {
             String conteudo;
-            conteudo = new String(Files.readAllBytes(Paths.get(arquivo)), StandardCharsets.UTF_8);
+            conteudo = new String(Files.readAllBytes(Paths.get(arquivo)), StandardCharsets.UTF_8) +"  ";
             System.out.println("DEBUG ----------");
             content = conteudo.toCharArray();
             System.out.println(conteudo);
@@ -28,12 +28,12 @@ public class OniclaLexico {
     public Token nextToken() {
         char currentChar;
         String term = "";
-        if(isEOF()) {
-            return null;
-        }
         state = 0;
         while(true) {
             currentChar = nextChar();
+            if(isEOF()) {
+                return new Token(TipoToken.EOF, "EOF");
+            }
             switch(state) {
                 case 0:
                     if(isCharLower(currentChar)) {
@@ -90,8 +90,9 @@ public class OniclaLexico {
                 case 1:
                     if(isCharLower(currentChar) || isCharUpper(currentChar) || isDigit(currentChar)) {
                         term += currentChar;
-                        state = 1;
-                    } else if(isSpace(currentChar) || isOperator(currentChar)) {
+
+                    } else if(isSpace(currentChar) || isOperator(currentChar) || !Character.isLetterOrDigit(currentChar)) {
+                        back();
                         state = 2;
                     } else {
                         throw new OniclaLexicalException("Malformed Identifier");
@@ -103,11 +104,12 @@ public class OniclaLexico {
                 case 3:
                     if(isDigit(currentChar)) {
                         term += currentChar;
-                        state = 3;
+
                     } else if(currentChar == '.') {
                         term += currentChar;
                         state = 4;
-                    } else if(!Character.isLetterOrDigit(currentChar)) {
+                    } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)){
+                        back();
                         state = 5;
                     } else {
                         throw new OniclaLexicalException("Unrecognized Number");
@@ -116,11 +118,11 @@ public class OniclaLexico {
                 case 4:
                     if(isDigit(currentChar)) {
                         term += currentChar;
-                        state = 4;
+
                     } else if(currentChar == '.') {
                         throw new OniclaLexicalException("Unrecognized Number");
 
-                    } else if(!Character.isLetterOrDigit(currentChar)) {
+                    } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)) {
                         back();
                         state = 6;
                     } else {
@@ -132,7 +134,6 @@ public class OniclaLexico {
                     return new Token(TipoToken.CTE_INT, term);
                 case 6:
                     back();
-                    term += currentChar;
                     return new Token(TipoToken.CTE_FLOAT, term);
                 case 7:
                     back();
@@ -226,7 +227,7 @@ public class OniclaLexico {
     }
 
     private boolean isSpace(char c) {
-        return Character.isWhitespace(c) || c == '\t' || c == '\n' || c == '\r';
+        return Character.isWhitespace(c) || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\0' || c == '\b';
     }
 
     private char nextChar() {

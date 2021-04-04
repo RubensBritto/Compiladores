@@ -16,7 +16,7 @@ public class Main {
                 if (token != null) {
                     System.out.println(token);
                 }
-            } while (token != null);
+            } while (token.lexema != "EOF");
         } catch (OniclaLexicalException ex) {
             System.out.println("Lexico erro " + ex.getMessage());
         }catch (Exception ex){
