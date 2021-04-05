@@ -19,6 +19,8 @@ public class OniclaLexico {
 
     public OniclaLexico(String arquivo) {
         try {
+            line = 1;
+            column = 1;
             reader = new BufferedReader(new FileReader(new File(arquivo)));
             nextLine();
             content = lineTxt.toCharArray();
@@ -41,6 +43,7 @@ public class OniclaLexico {
                 }
             }
             currentChar = nextChar();
+
             switch(state) {
                 case 0:
                     if (isCharLower(currentChar)) {
@@ -100,7 +103,7 @@ public class OniclaLexico {
                         term += currentChar;
                         return new Token(TipoToken.OP_CONCAT, term,line,column);
                     } else {
-                        throw new OniclaLexicalException("Unrecognized Symbol");
+                        return new Token(TipoToken.ER_SYMBOL, term,line,column);
                     }
                     break;
                 case 1:
@@ -111,7 +114,7 @@ public class OniclaLexico {
                         back();
                         state = 2;
                     } else {
-                        throw new OniclaLexicalException("Malformed Identifier");
+                        return new Token(TipoToken.ER_ID, term,line,column);
                     }
                     break;
                 case 2:
@@ -128,7 +131,7 @@ public class OniclaLexico {
                         back();
                         state = 5;
                     } else {
-                        throw new OniclaLexicalException("Unrecognized Number");
+                        return new Token(TipoToken.ER_NUMBER, term,line,column);
                     }
                     break;
                 case 4:
@@ -136,13 +139,13 @@ public class OniclaLexico {
                         term += currentChar;
 
                     } else if(currentChar == '.') {
-                        throw new OniclaLexicalException("Unrecognized Number");
+                        return new Token(TipoToken.ER_NUMBER, term,line,column);
 
                     } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)) {
                         back();
                         state = 6;
                     } else {
-                        throw new OniclaLexicalException("Unrecognized Number");
+                        return new Token(TipoToken.ER_NUMBER, term,line,column);
                     }
                     break;
                 case 5:
@@ -159,7 +162,7 @@ public class OniclaLexico {
                         currentChar = nextChar();
                         if(currentChar == '=') {
                             term += currentChar;
-                            return new Token(TipoToken.OP_GREATEREQ, term,line,column);
+                            return new Token(TipoToken.OP_GREATEQ, term,line,column);
                         } else {
                             back();
                             return new Token(TipoToken.OP_GREATER, term,line,column);
@@ -185,7 +188,7 @@ public class OniclaLexico {
                                 term += currentChar;
                                 return new Token(TipoToken.OP_REL, term,line,column);
                             } else {
-                                throw new OniclaLexicalException("Unrecognized Symbol");
+                                return new Token(TipoToken.ER_SYMBOL, term,line,column);
                             }
                         } else {
                             back();
@@ -194,7 +197,7 @@ public class OniclaLexico {
                     } else if(currentChar == '!') {
                         return new Token(TipoToken.OP_NOT, term,line,column);
                     } else {
-                        throw new OniclaLexicalException("Unrecognized Symbol");
+                        return new Token(TipoToken.ER_SYMBOL, term,line,column);
                     }
                 case 8:
                     if(currentChar >= (char) 32 && currentChar <= (char) 126) {
@@ -208,7 +211,7 @@ public class OniclaLexico {
                             state = 10;
                         }
                     } else {
-                        throw new OniclaLexicalException("Unrecognized Character");
+                        return new Token(TipoToken.ER_CHAR, term,line,column);
                     }
                     break;
 
@@ -219,11 +222,11 @@ public class OniclaLexico {
                     if(currentChar >= (char) 32 && currentChar <= (char) 126) {
                         term += currentChar;
                         if(currentChar == '\'') {
-                            return new Token(TipoToken.CTE_CAD_CHARAC, term,line,column);
+                            return new Token(TipoToken.CTE_CADCHA, term,line,column);
                         }
                     } else {
                         System.out.println("ulitmo " + term);
-                        throw new OniclaLexicalException("Unrecognized CharacterArray");
+                        return new Token(TipoToken.ER_CHAR, term,line,column);
                     }
                     break;
                 case 11:
@@ -274,6 +277,11 @@ public class OniclaLexico {
         position--;
     }
 
+    public void printCodeLine(String conteudo) {
+        String format = "%4d  %s";
+        System.out.println(String.format(format, line, conteudo));
+    }
+
     private boolean nextLine(){
         String contetTemp = " ";
         try {
@@ -284,6 +292,7 @@ public class OniclaLexico {
         }
         if (contetTemp != null){
             lineTxt = contetTemp;
+            printCodeLine(lineTxt);
             lineTxt+= " ";
             line++;
             position = 0;
