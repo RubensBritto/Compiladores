@@ -1,4 +1,4 @@
-package lexico;
+package src.lexico;
 
 public class Token {
     public TipoToken tipoToken;

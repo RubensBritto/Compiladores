@@ -1,4 +1,4 @@
-package lexico;
+package src.lexico;
 
 public enum TipoToken {
     EOF,
@@ -54,6 +54,5 @@ public enum TipoToken {
     ER_CHAR,
     ER_NUMBER,
     ER_KEYWORD,
-    ER_SYMBOL,
-    COMMENT;
+    ER_SYMBOL;
 }

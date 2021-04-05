@@ -1,14 +1,12 @@
-package main;
+package src.main;
 
-import exceptions.OniclaLexicalException;
-import lexico.OniclaLexico;
-import lexico.Token;
+import src.execptions.OniclaLexicalException;
+import src.lexico.OniclaLexico;
+import src.lexico.Token;
 
 public class Main {
     public static void main(String[] args) {
-        String path = "D:\\Rubens_HD\\Intellij\\onicla\\src\\main\\ola.txt";
-        String path2 = "C:\\Users\\ramon\\Downloads\\Compiladores-main\\onicla\\src\\ola.txt";
-        OniclaLexico lexico = new OniclaLexico(path);
+        OniclaLexico lexico = new OniclaLexico(args[0]);
         Token token = null;
         try {
             do {

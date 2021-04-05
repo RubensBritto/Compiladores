@@ -1,6 +1,4 @@
-package lexico;
-
-import exceptions.OniclaLexicalException;
+package src.lexico;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -35,10 +33,10 @@ public class OniclaLexico {
         String term = "";
         state = 0;
         while(true) {
-            if (isEOF()){
-                if (nextLine()){
+            if(isEOF()) {
+                if(nextLine()) {
                     content = lineTxt.toCharArray();
-                }else{
+                } else {
                     return new Token(TipoToken.EOF, "EOF", line, column);
                 }
             }
@@ -46,26 +44,26 @@ public class OniclaLexico {
 
             switch(state) {
                 case 0:
-                    if (isCharLower(currentChar)) {
+                    if(isCharLower(currentChar)) {
                         term += currentChar;
                         state = 1;
-                    } else if (isDigit(currentChar)) {
+                    } else if(isDigit(currentChar)) {
                         term += currentChar;
                         state = 3;
-                    } else if (isSpace(currentChar)) {
+                    } else if(isSpace(currentChar)) {
                         state = 0;
-                    } else if (isOperator(currentChar)) {
+                    } else if(isOperator(currentChar)) {
                         term += currentChar;
                         state = 7;
-                    } else if (currentChar == '\'') {
+                    } else if(currentChar == '\'') {
                         term += currentChar;
                         state = 8;
-                    } else if(isCharUpper(currentChar)){
+                    } else if(isCharUpper(currentChar)) {
                         term += currentChar;
                         state = 11;
-                    }else if (currentChar == '#'){
-                        //fazer uma condiçaõ
-                    }else if(currentChar == '+') {
+                    } else if(currentChar == '#') {
+                        state = 13;
+                    } else if(currentChar == '+') {
                         term += currentChar;
                         return new Token(TipoToken.OP_AD, term,line,column);
                     } else if(currentChar == '-') {
@@ -129,7 +127,7 @@ public class OniclaLexico {
                     } else if(currentChar == '.') {
                         term += currentChar;
                         state = 4;
-                    } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)){
+                    } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)) {
                         back();
                         state = 5;
                     } else {
@@ -139,10 +137,8 @@ public class OniclaLexico {
                 case 4:
                     if(isDigit(currentChar)) {
                         term += currentChar;
-
                     } else if(currentChar == '.') {
                         new Token(TipoToken.ER_NUMBER, term,line,column);
-
                     } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)) {
                         back();
                         state = 6;
@@ -241,12 +237,15 @@ public class OniclaLexico {
                     break;
                 case 12:
                     back();
-                    if (hash.keyWords.get(term) != null){
+                    if(hash.keyWords.get(term) != null) {
                        return new Token(hash.keyWords.get(term), term, line, column);
-                    }else{
+                    } else {
                         return new Token(TipoToken.ER_KEYWORD, term, line, column);
                     }
-
+                case 13:
+                    if(isSpace(currentChar)) {
+                        state = 0;
+                    }
             }
         }
     }
@@ -289,25 +288,23 @@ public class OniclaLexico {
         System.out.println(String.format(format, line, conteudo));
     }
 
-    private boolean nextLine(){
+    private boolean nextLine() {
         String contetTemp = " ";
         try {
             contetTemp = reader.readLine();
-
-        }catch (Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
-        if (contetTemp != null){
+        if(contetTemp != null) {
             lineTxt = contetTemp;
             printCodeLine(lineTxt);
-            lineTxt+= " ";
+            lineTxt += " ";
             line++;
             position = 0;
             column = 1;
-            return true;
 
+            return true;
         }
         return false;
     }
-
 }

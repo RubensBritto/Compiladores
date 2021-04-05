@@ -1,8 +1,4 @@
-package lexico;
-
-
-
-import exceptions.OniclaLexicalException;
+package src.lexico;
 
 import java.util.Hashtable;
 
