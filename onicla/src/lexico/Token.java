@@ -20,7 +20,7 @@ public class Token {
 
     @Override
     public String toString() {
-        String format = "              [%04d, %04d] (%04d, %20s) {%s}";
+        String format = "          [%04d, %04d] (%04d, %20s) {%s}";
         return String.format(format, line-1, columm, tipoToken.ordinal(), tipoToken.toString(), lexema);
     }
 }

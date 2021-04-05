@@ -1,4 +1,5 @@
-Function Integer Main ( ) Begin
+Function Integer Main( ) Begin
 	Print('Alo mundo!');
+	#oi
 	Refound 0;
 End

@@ -41,7 +41,7 @@ public class OniclaLexico {
                 }
             }
             currentChar = nextChar();
-
+    
             switch(state) {
                 case 0:
                     if(isCharLower(currentChar)) {
@@ -65,42 +65,55 @@ public class OniclaLexico {
                         state = 13;
                     } else if(currentChar == '+') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.OP_AD, term,line,column);
                     } else if(currentChar == '-') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.OP_SUB, term,line,column);
                     } else if(currentChar == '*') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.OP_MULT, term,line,column);
                     } else if(currentChar == '/') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.OP_DIV, term,line,column);
                     } else if(currentChar == '%') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.OP_RES, term,line,column);
                     } else if(currentChar == '(') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.AB_PAR, term,line,column);
                     } else if(currentChar == ')') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.FEC_PAR, term,line,column);
                     } else if(currentChar == '[') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.AB_COL, term,line,column);
                     } else if(currentChar == ']') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.FEC_COL, term,line,column);
                     } else if(currentChar == ';') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.TERMINAL, term,line,column);
                     } else if(currentChar == ',') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.SEP, term,line,column);
                     } else if(currentChar == '~') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.OP_NOTUN, term,line,column);
                     } else if(currentChar == '^') {
                         term += currentChar;
+                        column++;
                         return new Token(TipoToken.OP_CONCAT, term,line,column);
                     } else {
                         new Token(TipoToken.ER_SYMBOL, term,line,column);
@@ -114,11 +127,13 @@ public class OniclaLexico {
                         back();
                         state = 2;
                     } else {
+                        column++;
                         new Token(TipoToken.ER_ID, term,line,column);
                     }
                     break;
                 case 2:
                     back();
+                    column++;
                     return new Token(TipoToken.ID, term,line,column);
                 case 3:
                     if(isDigit(currentChar)) {
@@ -127,10 +142,12 @@ public class OniclaLexico {
                     } else if(currentChar == '.') {
                         term += currentChar;
                         state = 4;
+                        column++;
                     } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)) {
                         back();
                         state = 5;
                     } else {
+                        column++;
                         new Token(TipoToken.ER_NUMBER, term,line,column);
                     }
                     break;
@@ -138,19 +155,23 @@ public class OniclaLexico {
                     if(isDigit(currentChar)) {
                         term += currentChar;
                     } else if(currentChar == '.') {
+                        column++;
                         new Token(TipoToken.ER_NUMBER, term,line,column);
                     } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)) {
                         back();
                         state = 6;
                     } else {
+                        column++;
                         new Token(TipoToken.ER_NUMBER, term,line,column);
                     }
                     break;
                 case 5:
                     back();
+                    column++;
                     return new Token(TipoToken.CTE_INT, term,line,column);
                 case 6:
                     back();
+                    column++;
                     return new Token(TipoToken.CTE_FLOAT, term,line,column);
                 case 7:
                     back();
@@ -160,41 +181,50 @@ public class OniclaLexico {
                         currentChar = nextChar();
                         if(currentChar == '=') {
                             term += currentChar;
+                            column++;
                             return new Token(TipoToken.OP_GREATEQ, term,line,column);
                         } else {
                             back();
+                            column++;
                             return new Token(TipoToken.OP_GREATER, term,line,column);
                         }
                     } else if(currentChar == '<') {
                         currentChar = nextChar();
                         if(currentChar == '=') {
                             term += currentChar;
+                            column++;
                             return new Token(TipoToken.OP_LESSEQ, term,line,column);
                         } else {
                             back();
+                            column++;
                             return new Token(TipoToken.OP_LESS, term,line,column);
                         }
                     } else if(currentChar == '=') {
                         currentChar = nextChar();
                         if(currentChar == '=') {
                             term += currentChar;
+                            column++;
                             return new Token(TipoToken.OP_REL, term,line,column);
                         } else if(currentChar == '/') {
                             term += currentChar;
                             currentChar = nextChar();
                             if(currentChar == '=') {
                                 term += currentChar;
+                                column++;
                                 return new Token(TipoToken.OP_REL, term,line,column);
                             } else {
+                                column++;
                                 new Token(TipoToken.ER_SYMBOL, term,line,column);
                             }
                         } else {
                             back();
+                            column++;
                             return new Token(TipoToken.OP_ATR, term,line,column);
                         }
                     } else if(currentChar == '!') {
                         return new Token(TipoToken.OP_NOT, term,line,column);
                     } else {
+                        column++;
                         new Token(TipoToken.ER_SYMBOL, term,line,column);
                     }
                 case 8:
@@ -209,20 +239,24 @@ public class OniclaLexico {
                             state = 10;
                         }
                     } else {
+                        column++;
                         new Token(TipoToken.ER_CHAR, term,line,column);
                     }
                     break;
 
                 case 9:
                     back();
+                    column++;
                     return new Token(TipoToken.CTE_CHAR, term,line,column);
                 case 10:
                     if(currentChar >= (char) 32 && currentChar <= (char) 126) {
                         term += currentChar;
                         if(currentChar == '\'') {
+                            column++;
                             return new Token(TipoToken.CTE_CADCHA, term,line,column);
                         }
                     } else {
+                        column++;
                         System.out.println("ulitmo " + term);
                         new Token(TipoToken.ER_CHAR, term,line,column);
                     }
@@ -238,8 +272,10 @@ public class OniclaLexico {
                 case 12:
                     back();
                     if(hash.keyWords.get(term) != null) {
+                        column++;
                        return new Token(hash.keyWords.get(term), term, line, column);
                     } else {
+                        column++;
                         return new Token(TipoToken.ER_KEYWORD, term, line, column);
                     }
                 case 13:
@@ -270,7 +306,7 @@ public class OniclaLexico {
     }
 
     private char nextChar() {
-        column++;
+        //column++;
         return content[position++];
     }
 
@@ -279,7 +315,7 @@ public class OniclaLexico {
     }
 
     private void back() {
-        column--;
+        //column--;
         position--;
     }
 
@@ -301,7 +337,7 @@ public class OniclaLexico {
             lineTxt += " ";
             line++;
             position = 0;
-            column = 1;
+            column = 0;
 
             return true;
         }

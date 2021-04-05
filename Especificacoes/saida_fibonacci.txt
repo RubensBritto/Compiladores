@@ -1,0 +1,104 @@
+   1  Function Integer fibonacci(Integer n) Begin
+              [0001, 0009] (0022,              PR_FUNC) {Function}
+              [0001, 0017] (0028,           PR_INTEGER) {Integer}
+              [0001, 0027] (0001,                   ID) {fibonacci}
+              [0001, 0028] (0043,               AB_PAR) {(}
+              [0001, 0035] (0028,           PR_INTEGER) {Integer}
+              [0001, 0037] (0001,                   ID) {n}
+              [0001, 0038] (0044,              FEC_PAR) {)}
+              [0001, 0044] (0039,             PR_BEGIN) {Begin}
+   2  		If(n < 2) Begin
+              [0002, 0005] (0024,                PR_IF) {If}
+              [0002, 0006] (0043,               AB_PAR) {(}
+              [0002, 0007] (0001,                   ID) {n}
+              [0002, 0009] (0015,              OP_LESS) {<}
+              [0002, 0011] (0003,              CTE_INT) {2}
+              [0002, 0012] (0044,              FEC_PAR) {)}
+              [0002, 0018] (0039,             PR_BEGIN) {Begin}
+   3  			Refound n;
+              [0003, 0011] (0023,           PR_REFOUND) {Refound}
+              [0003, 0013] (0001,                   ID) {n}
+              [0003, 0014] (0047,             TERMINAL) {;}
+   4  		End
+              [0004, 0006] (0040,               PR_END) {End}
+   5  		Else Begin
+              [0005, 0007] (0025,              PR_ELSE) {Else}
+              [0005, 0013] (0039,             PR_BEGIN) {Begin}
+   6  			Refound fibonacci(n - 1) + fibonacci(n - 2);
+              [0006, 0011] (0023,           PR_REFOUND) {Refound}
+              [0006, 0021] (0001,                   ID) {fibonacci}
+              [0006, 0022] (0043,               AB_PAR) {(}
+              [0006, 0023] (0001,                   ID) {n}
+              [0006, 0025] (0009,               OP_SUB) {-}
+              [0006, 0027] (0003,              CTE_INT) {1}
+              [0006, 0028] (0044,              FEC_PAR) {)}
+              [0006, 0030] (0008,                OP_AD) {+}
+              [0006, 0040] (0001,                   ID) {fibonacci}
+              [0006, 0041] (0043,               AB_PAR) {(}
+              [0006, 0042] (0001,                   ID) {n}
+              [0006, 0044] (0009,               OP_SUB) {-}
+              [0006, 0046] (0003,              CTE_INT) {2}
+              [0006, 0047] (0044,              FEC_PAR) {)}
+              [0006, 0048] (0047,             TERMINAL) {;}
+   7  		End
+              [0007, 0006] (0040,               PR_END) {End}
+   8  	End
+              [0008, 0005] (0040,               PR_END) {End}
+   9  
+  10  	Function Integer Main ( ) Begin
+              [0010, 0010] (0022,              PR_FUNC) {Function}
+              [0010, 0018] (0028,           PR_INTEGER) {Integer}
+              [0010, 0023] (0042,              PR_MAIN) {Main}
+              [0010, 0025] (0043,               AB_PAR) {(}
+              [0010, 0027] (0044,              FEC_PAR) {)}
+              [0010, 0033] (0039,             PR_BEGIN) {Begin}
+  11  		Integer n;
+              [0011, 0010] (0028,           PR_INTEGER) {Integer}
+              [0011, 0012] (0001,                   ID) {n}
+              [0011, 0013] (0047,             TERMINAL) {;}
+  12  		Print('Digite o tamanho da sequencia:');
+              [0012, 0008] (0034,             PR_PRINT) {Print}
+              [0012, 0009] (0043,               AB_PAR) {(}
+              [0012, 0041] (0005,           CTE_CADCHA) {'Digite o tamanho da sequencia:'}
+              [0012, 0042] (0044,              FEC_PAR) {)}
+              [0012, 0043] (0047,             TERMINAL) {;}
+  13  		Input(n);
+              [0013, 0008] (0033,             PR_INPUT) {Input}
+              [0013, 0009] (0043,               AB_PAR) {(}
+              [0013, 0010] (0001,                   ID) {n}
+              [0013, 0011] (0044,              FEC_PAR) {)}
+              [0013, 0012] (0047,             TERMINAL) {;}
+  14  
+  15  		Repeat(int i = 0, 1, n) Begin
+              [0015, 0009] (0027,            PR_REPEAT) {Repeat}
+              [0015, 0010] (0043,               AB_PAR) {(}
+              [0015, 0013] (0001,                   ID) {int}
+              [0015, 0015] (0001,                   ID) {i}
+              [0015, 0017] (0006,               OP_ATR) {=}
+              [0015, 0019] (0003,              CTE_INT) {0}
+              [0015, 0020] (0048,                  SEP) {,}
+              [0015, 0022] (0003,              CTE_INT) {1}
+              [0015, 0023] (0048,                  SEP) {,}
+              [0015, 0025] (0001,                   ID) {n}
+              [0015, 0026] (0044,              FEC_PAR) {)}
+              [0015, 0032] (0039,             PR_BEGIN) {Begin}
+  16  			Print(fibonacci(i) ^ ' ');
+              [0016, 0009] (0034,             PR_PRINT) {Print}
+              [0016, 0010] (0043,               AB_PAR) {(}
+              [0016, 0019] (0001,                   ID) {fibonacci}
+              [0016, 0020] (0043,               AB_PAR) {(}
+              [0016, 0021] (0001,                   ID) {i}
+              [0016, 0022] (0044,              FEC_PAR) {)}
+              [0016, 0024] (0013,            OP_CONCAT) {^}
+              [0016, 0028] (0004,             CTE_CHAR) {' '}
+              [0016, 0029] (0044,              FEC_PAR) {)}
+              [0016, 0030] (0047,             TERMINAL) {;}
+  17  		End
+              [0017, 0006] (0040,               PR_END) {End}
+  18  
+  19  		Refound;
+              [0019, 0010] (0023,           PR_REFOUND) {Refound}
+              [0019, 0011] (0047,             TERMINAL) {;}
+  20  	End
+              [0020, 0005] (0040,               PR_END) {End}
+              [0020, 0006] (0000,                  EOF) {EOF}
