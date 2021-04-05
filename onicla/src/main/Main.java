@@ -6,7 +6,7 @@ import lexico.Token;
 
 public class Main {
     public static void main(String[] args) {
-        String path = "D:\\Rubens_HD\\Intellij\\onicla_v2\\src\\main\\ola3.txt";
+        String path = "D:\\Rubens_HD\\Intellij\\onicla\\src\\main\\ola.txt";
         String path2 = "C:\\Users\\ramon\\Downloads\\Compiladores-main\\onicla\\src\\ola.txt";
         OniclaLexico lexico = new OniclaLexico(path);
         Token token = null;

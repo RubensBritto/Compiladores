@@ -53,5 +53,7 @@ public enum TipoToken {
     ER_ID,
     ER_CHAR,
     ER_NUMBER,
-    ER_SYMBOL;
+    ER_KEYWORD,
+    ER_SYMBOL,
+    COMMENT;
 }

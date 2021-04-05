@@ -1,6 +1,7 @@
 package lexico;
 
 
+
 import exceptions.OniclaLexicalException;
 
 import java.util.Hashtable;
@@ -13,7 +14,7 @@ public class KeyWordsHash {
         keyWords.put("Main", TipoToken.PR_MAIN);
         keyWords.put("Begin", TipoToken.PR_BEGIN);
         keyWords.put("End",TipoToken.PR_END);
-        keyWords.put("Function", TipoToken.PR_FUNCTION);
+        keyWords.put("Function", TipoToken.PR_FUNC);
         keyWords.put("And", TipoToken.PR_AND);
         keyWords.put("Or", TipoToken.PR_OR);
         keyWords.put("Refound", TipoToken.PR_REFOUND);
@@ -24,8 +25,8 @@ public class KeyWordsHash {
         keyWords.put("Repeat", TipoToken.PR_REPEAT);
         keyWords.put("Integer", TipoToken.PR_INTEGER);
         keyWords.put("Float",TipoToken.PR_FLOAT);
-        keyWords.put( "Characterarray", TipoToken.PR_CHARACTERARRAY);
-        keyWords.put("Character", TipoToken.PR_CHARACTER);
+        keyWords.put( "Characterarray", TipoToken.PR_CHARRAY);
+        keyWords.put("Character", TipoToken.PR_CHARAC);
         keyWords.put("Bool", TipoToken.PR_BOOL);
         keyWords.put( "Input", TipoToken.PR_INPUT);
         keyWords.put("Print", TipoToken.PR_PRINT);
@@ -34,14 +35,6 @@ public class KeyWordsHash {
         keyWords.put("False", TipoToken.PR_FALSE);
         keyWords.put("Null", TipoToken.PR_NULL);
 
-    }
-
-    public TipoToken search(String term){
-        if(keyWords.containsKey(term)) {
-            return keyWords.get(term);
-        } else {
-            throw new OniclaLexicalException("Unrecognized KeyWord");
-        }
     }
 
 }
