@@ -15,7 +15,7 @@
 4. Abir o terminal e digitar
 
 
-`cd onicla`
+`cd Compiladores/onicla`
 
 
 4. Para compilar o arquivo, usar o seguinte comando:
