@@ -1,19 +1,26 @@
 package lexico;
 
 public class Token {
-    public TipoToken nome;
+    public TipoToken tipoToken;
     public String lexema;
+    public int line, columm;
 
-    public Token(TipoToken nome, String lexema) {
-        this.nome = nome;
+
+    public Token(TipoToken tipoToken, String lexema, int line, int columm) {
+        this.tipoToken = tipoToken;
         this.lexema = lexema;
+        this.line = line;
+        this.columm = columm;
     }
+
+    public Token() {
+        super();
+    }
+
 
     @Override
     public String toString() {
-        return "Token{" +
-                "nome=" + nome +
-                ", lexema='" + lexema + '\'' +
-                '}';
+        String format = "              [%04d, %04d] (%04d, %20s) {%s}";
+        return String.format(format, line-1, columm, tipoToken.ordinal(), tipoToken.toString(), lexema);
     }
 }

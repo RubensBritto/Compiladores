@@ -19,7 +19,7 @@ public class Main {
             } while (token.lexema != "EOF");
         } catch (OniclaLexicalException ex) {
             System.out.println("Lexico erro " + ex.getMessage());
-        }catch (Exception ex){
+        } catch (Exception ex) {
             System.out.println("Erro generico");
         }
     }

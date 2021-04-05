@@ -1,299 +1,297 @@
 package lexico;
 
-import java.nio.charset.Charset;
+import exceptions.OniclaLexicalException;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 
 public class OniclaLexico {
-
-    private String name = "";
+    KeyWordsHash hash = new KeyWordsHash();
+    private char[] content;
     private int state;
+    private int position;
+    private String lineTxt = " ";
+    private int line, column;
+    private BufferedReader reader;
+    Token token;
 
-    public int getState() {
-        return state;
-    }
-    public void setState(int state) {
-        this.state = state;
-    }
-    public String getName() {
-        return name;
-    }
-    public void setName(char c) {
-        this.name += c;
-    }
-    public void clearName(){
-        this.name = "";
-    }
 
-    public void proxToken(String linha) {
-        char[] d = new char[1000];
-        d = linha.toCharArray();
-        setState(1);
-        for(int i = 0; i < d.length; i++) {
-            if(Character.isWhitespace(d[i]))
-                i++;
-            else if(Character.isUpperCase(d[0]) && Character.isLetter(d[i]))
-                keyWords(d[i]);
-            else if(Character.isLowerCase(d[0]) && Character.isLetterOrDigit(d[i])) {
-                if(!Character.isLetterOrDigit(d[i+1])) {
-                    setState(2);
-                }
-                identificadores(d[i]);
-            }
-            else if(Character.isDigit(d[i]) || (d[i] == '.' && Character.isDigit(d[i+1]))) {
-                if (d[i] == '.') {
-                    setState(3);
-                }
-                if (!Character.isDigit(d[i + 1]) && d[i] != '.' && getState() == 3) {
-                    setState(4);
-                }
-                else if (!Character.isDigit(d[i + 1]) && d[i + 1] != '.' && getState() == 1) {
-                    setState(2);
-                }
-                numeros(d[i]);
-            }
-            else if(d[i] == '*' || d[i] == '/' || d[i] == '-' || d[i] == '+' || d[i] == '%')
-                operadoresAritmetico(d[i]);
-            else if(d[i] == ',' || d[i] == '(' || d[i] == ')' || d[i] == '[' || d[i] == ']' || d[i] == ';')
-                delimitador(d[i]);
-            else if(d[i] == '>' || d[i] == '<'){
-                if(d[i] == '>' && d[i+1] == '=') {
-                    i++;
-                    operadoresRelacionais(1);
-                }
-                else if(d[i] == '<' && d[i+1] == '=') {
-                    i++;
-                    operadoresRelacionais(2);
-                }
-                else if(d[i] == '>')
-                    operadoresRelacionais(3);
-                else
-                    operadoresRelacionais(4);
-            }
-            else if (d[i] == '=' || d[i] == '!') {
-                try {
-                    if (d[i] == '=' && d[i + 1] == '=') {
-                        i++;
-                        operadoresBooleanos(1);
-                    } else if (d[i] == '=' && d[i + 1] == '/' && d[i + 2] == '=') {
-                        i += 2;
-                        operadoresBooleanos(2);
-                    } else if (d[i] == '=') {
-                        operadoresBooleanos(3);
-                    } else if (d[i] == '!') {
-                        operadoresBooleanos(4);
-                    }
-                } catch (ArrayIndexOutOfBoundsException e) {
-                    if (d[i] == '=') {
-                        operadoresBooleanos(3);
-                    } else if (d[i] == '!') {
-                        operadoresBooleanos(4);
-                    }
-                }
-            }
-            else if (d[i] == '\'')
-                cadeiaCharacter(d[i]);
-            else if (d[i] == '\n' || d[i] == '\t' || d[i] == '\r' || Character.isWhitespace(d[i]) || d[i] == '#')
-                spaceAndComments(d[i]);
-        }
-        return;
-    }
-
-    private Token operadoresAritmetico(char c) {
-        if(c == '*') {
-            System.out.println(new Token(TipoToken.OP_MULT, "*"));
-        } else if(c == '/') {
-            System.out.println(new Token(TipoToken.OP_DIV, "/"));
-        } else if(c == '+') {
-            System.out.println(new Token(TipoToken.OP_AD, "+"));
-        } else if(c == '-') {
-            System.out.println(new Token(TipoToken.OP_SUB, "-"));
-        } else if(c == '%') {
-            System.out.println(new Token(TipoToken.OP_RES, "%"));
-        }
-        return null;
-    }
-
-    private Token delimitador(char c) {
-        if (c == ',') {
-            System.out.println(new Token(TipoToken.SEP, ","));
-        } else if(c == '(') {
-            System.out.println(new Token(TipoToken.AB_PAR, "("));
-        } else if(c == ')') {
-            System.out.println(new Token(TipoToken.FEC_PAR, ")"));
-        }  else if(c == '[') {
-            System.out.println(new Token(TipoToken.AB_COL, "["));
-        } else if(c == ']') {
-            System.out.println(new Token(TipoToken.FEC_COL, "]"));
-        } else if(c == ';') {
-           System.out.println( new Token(TipoToken.TERMINAL, ";"));
-        }
-        return null;
-    }
-
-    private Token operadoresRelacionais(int c) {
-        if(c == 1) {
-            System.out.println(new Token(TipoToken.OP_GREATEREQ, ">="));
-        } else if(c == 2) {
-            System.out.println(new Token(TipoToken.OP_LESSEQ, "<="));
-        } else if(c == 3) {
-            System.out.println(new Token(TipoToken.OP_GREATER, ">"));
-        } else {
-            System.out.println(new Token(TipoToken.OP_LESS, "<"));
-        }
-        return null;
-    }
-
-    private Token operadoresBooleanos(int c){
-        if(c == 1) {
-            System.out.println(new Token(TipoToken.OP_REL, "=="));
-        } else if(c == 2) {
-            System.out.println(new Token(TipoToken.OP_REL, "=/="));
-        } else if(c == 3) {
-            System.out.println(new Token(TipoToken.OP_ATR, "="));
-        } else {
-            System.out.println(new Token(TipoToken.OP_NOT, "!"));
-        }
-        return null;
-    }
-
-    private Token numeros(char c) {
-        //falta olhar o sinal
-        if(getState() == 1) {
-            setName(c);
-        } else if(getState() == 2) {
-            setName(c);
-            System.out.println(new Token(TipoToken.CTE_INT, getName()));
-            clearName();
-            setState(1);
-        } else if(getState() == 3) {
-            setName(c);
-        } else if(getState() == 4) {
-            setName(c);
-            System.out.println(new Token(TipoToken.CTE_FLOAT, getName()));
-            clearName();
-            setState(1);
-        }
-        return null;
-    }
-
-    private Token identificadores(char c){
-        if(getState() == 1) {
-            setName(c);
-        } else if(getState() == 2) {
-            setName(c);
-            System.out.println(new Token(TipoToken.ID,getName()));
-            clearName();
-            setState(1);
-        }
-        return null;
-    }
-
-    private Token cadeiaCharacter(char c){
-        int estado = 1;
-        int cont = 0;
-        while (true) {
-            if (estado == 1) {
-                if (Character.isWhitespace(c) || c == ' ') {
-                    estado = 1;
-                } else if (c == '\'') {
-                    cont++;
-                    estado = 2;
-                } else {
-                    return null;
-                }
-            } else if(estado == 2){
-                if(Character.isWhitespace(c) || c == ' ') {
-                    cont--;
-                } else if(cont == 2 && c == '\''){
-                    return new Token(TipoToken.CTE_CHAR, getName());
-                } else if (c == '\'') {
-                    return new Token(TipoToken.CTE_CAD_CHARAC, getName());
-                }
-                cont++;
-            }
+    public OniclaLexico(String arquivo) {
+        try {
+            reader = new BufferedReader(new FileReader(new File(arquivo)));
+            nextLine();
+            content = lineTxt.toCharArray();
+            position = 0;
+        } catch(Exception ex) {
+            ex.printStackTrace();
         }
     }
 
-    private void spaceAndComments(char c) {
-        int estado = 1;
-        while (true) {
-            if(estado == 1){
-                if(Character.isWhitespace(c) || c == ' ') {
-                    estado = 2;
-                } else if(c == '#') {
-                    estado = 3;
-                } else{
-                    return;
-                }
-            } else if(estado == 2) {
-                if(c == '#') {
-                    estado = 3;
-                } else if(!(Character.isWhitespace(c) || c == ' ')) {
-                    return;
-                }
-            } else if(estado == 3){
-                if (c == '\n'){
-                    return;
-                }
-            }
-        }
-    }
-
-    private Token keyWords(char c) {
-        //String lexema += c
-        while (true) {
-            //char c = (char) ldat.lerProxCaractere();
-            if(!Character.isLetter(c)) {
-                String lexema =getName();
-                if(lexema.equals("And")) {
-                    return new Token(TipoToken.PR_AND, lexema);
-                } else if (lexema.equals("Or")) {
-                    return new Token(TipoToken.PR_OR, lexema);
-                } else if (lexema.equals("Function")) {
-                    return new Token(TipoToken.PR_FUNCTION, lexema);
-                } else if (lexema.equals("Refound")) {
-                    return new Token(TipoToken.PR_REFOUND, lexema);
-                } else if (lexema.equals("If")) {
-                    return new Token(TipoToken.PR_IF, lexema);
-                } else if (lexema.equals("Else")) {
-                    return new Token(TipoToken.PR_ELSE, lexema);
-                } else if (lexema.equals("While")) {
-                    return new Token(TipoToken.PR_WHILE, lexema);
-                } else if (lexema.equals("Forrepeat")) {
-                    return new Token(TipoToken.PR_FORREPEAT, lexema);
-                } else if (lexema.equals("Integer")) {
-                    return new Token(TipoToken.PR_INTEGER, lexema);
-                } else if (lexema.equals("Float")) {
-                    return new Token(TipoToken.PR_FLOAT, lexema);
-                } else if (lexema.equals("Characterarray")) {
-                    return new Token(TipoToken.PR_CHARACTERARRAY, lexema);
-                } else if (lexema.equals("Character")) {
-                    return new Token(TipoToken.PR_CHARACTER, lexema);
-                } else if (lexema.equals("Bool")) {
-                    return new Token(TipoToken.PR_BOOL, lexema);
-                } else if (lexema.equals("Input")) {
-                    return new Token(TipoToken.PR_INPUT, lexema);
-                } else if (lexema.equals("Print")) {
-                    return new Token(TipoToken.PR_PRINT, lexema);
-                } else if (lexema.equals("Printnl")) {
-                    return new Token(TipoToken.PR_PRINTNL, lexema);
-                } else if (lexema.equals("True")) {
-                    return new Token(TipoToken.PR_TRUE, lexema);
-                } else if (lexema.equals("False")) {
-                    return new Token(TipoToken.PR_FALSE, lexema);
-                } else if (lexema.equals("Null")) {
-                    return new Token(TipoToken.PR_NULL, lexema);
-                } else if (lexema.equals("BEGIN")) {
-                    return new Token(TipoToken.PR_BEGIN, lexema);
-                } else if (lexema.equals("END")) {
-                    return new Token(TipoToken.PR_END, lexema);
-                } else if (lexema.equals("Void")) {
-                    return new Token(TipoToken.PR_VOID, lexema);
-                } else if (lexema.equals("Main")) {
-                    return new Token(TipoToken.PR_MAIN, lexema);
+    public Token nextToken() {
+        char currentChar;
+        String term = "";
+        state = 0;
+        while(true) {
+            if (isEOF()){
+                if (nextLine()){
+                    content = lineTxt.toCharArray();
                 }else{
-                    return null;
+                    return new Token(TipoToken.EOF, "EOF", line, column);
                 }
+            }
+            currentChar = nextChar();
+            switch(state) {
+                case 0:
+                    if (isCharLower(currentChar)) {
+                        term += currentChar;
+                        state = 1;
+                    } else if (isDigit(currentChar)) {
+                        term += currentChar;
+                        state = 3;
+                    } else if (isSpace(currentChar)) {
+                        state = 0;
+                    } else if (isOperator(currentChar)) {
+                        term += currentChar;
+                        state = 7;
+                    } else if (currentChar == '\'') {
+                        term += currentChar;
+                        state = 8;
+                    } else if(isCharUpper(currentChar)){
+                        term += currentChar;
+                        state = 11;
+                    } else if(currentChar == '+') {
+                        term += currentChar;
+                        return new Token(TipoToken.OP_AD, term,line,column);
+                    } else if(currentChar == '-') {
+                        term += currentChar;
+                        return new Token(TipoToken.OP_SUB, term,line,column);
+                    } else if(currentChar == '*') {
+                        term += currentChar;
+                        return new Token(TipoToken.OP_MULT, term,line,column);
+                    } else if(currentChar == '/') {
+                        term += currentChar;
+                        return new Token(TipoToken.OP_DIV, term,line,column);
+                    } else if(currentChar == '%') {
+                        term += currentChar;
+                        return new Token(TipoToken.OP_RES, term,line,column);
+                    } else if(currentChar == '(') {
+                        term += currentChar;
+                        return new Token(TipoToken.AB_PAR, term,line,column);
+                    } else if(currentChar == ')') {
+                        term += currentChar;
+                        return new Token(TipoToken.FEC_PAR, term,line,column);
+                    } else if(currentChar == '[') {
+                        term += currentChar;
+                        return new Token(TipoToken.AB_COL, term,line,column);
+                    } else if(currentChar == ']') {
+                        term += currentChar;
+                        return new Token(TipoToken.FEC_COL, term,line,column);
+                    } else if(currentChar == ';') {
+                        term += currentChar;
+                        return new Token(TipoToken.TERMINAL, term,line,column);
+                    } else if(currentChar == ',') {
+                        term += currentChar;
+                        return new Token(TipoToken.SEP, term,line,column);
+                    } else if(currentChar == '~') {
+                        term += currentChar;
+                        return new Token(TipoToken.OP_NOTUN, term,line,column);
+                    } else if(currentChar == '^') {
+                        term += currentChar;
+                        return new Token(TipoToken.OP_CONCAT, term,line,column);
+                    } else {
+                        throw new OniclaLexicalException("Unrecognized Symbol");
+                    }
+                    break;
+                case 1:
+                    if(isCharLower(currentChar) || isCharUpper(currentChar) || isDigit(currentChar)) {
+                        term += currentChar;
+
+                    } else if(isSpace(currentChar) || isOperator(currentChar) || !Character.isLetterOrDigit(currentChar)) {
+                        back();
+                        state = 2;
+                    } else {
+                        throw new OniclaLexicalException("Malformed Identifier");
+                    }
+                    break;
+                case 2:
+                    back();
+                    return new Token(TipoToken.ID, term,line,column);
+                case 3:
+                    if(isDigit(currentChar)) {
+                        term += currentChar;
+
+                    } else if(currentChar == '.') {
+                        term += currentChar;
+                        state = 4;
+                    } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)){
+                        back();
+                        state = 5;
+                    } else {
+                        throw new OniclaLexicalException("Unrecognized Number");
+                    }
+                    break;
+                case 4:
+                    if(isDigit(currentChar)) {
+                        term += currentChar;
+
+                    } else if(currentChar == '.') {
+                        throw new OniclaLexicalException("Unrecognized Number");
+
+                    } else if(!Character.isLetterOrDigit(currentChar) || isSpace(currentChar) || isOperator(currentChar)) {
+                        back();
+                        state = 6;
+                    } else {
+                        throw new OniclaLexicalException("Unrecognized Number");
+                    }
+                    break;
+                case 5:
+                    back();
+                    return new Token(TipoToken.CTE_INT, term,line,column);
+                case 6:
+                    back();
+                    return new Token(TipoToken.CTE_FLOAT, term,line,column);
+                case 7:
+                    back();
+                    back();
+                    currentChar = nextChar();
+                    if(currentChar == '>') {
+                        currentChar = nextChar();
+                        if(currentChar == '=') {
+                            term += currentChar;
+                            return new Token(TipoToken.OP_GREATEREQ, term,line,column);
+                        } else {
+                            back();
+                            return new Token(TipoToken.OP_GREATER, term,line,column);
+                        }
+                    } else if(currentChar == '<') {
+                        currentChar = nextChar();
+                        if(currentChar == '=') {
+                            term += currentChar;
+                            return new Token(TipoToken.OP_LESSEQ, term,line,column);
+                        } else {
+                            back();
+                            return new Token(TipoToken.OP_LESS, term,line,column);
+                        }
+                    } else if(currentChar == '=') {
+                        currentChar = nextChar();
+                        if(currentChar == '=') {
+                            term += currentChar;
+                            return new Token(TipoToken.OP_REL, term,line,column);
+                        } else if(currentChar == '/') {
+                            term += currentChar;
+                            currentChar = nextChar();
+                            if(currentChar == '=') {
+                                term += currentChar;
+                                return new Token(TipoToken.OP_REL, term,line,column);
+                            } else {
+                                throw new OniclaLexicalException("Unrecognized Symbol");
+                            }
+                        } else {
+                            back();
+                            return new Token(TipoToken.OP_ATR, term,line,column);
+                        }
+                    } else if(currentChar == '!') {
+                        return new Token(TipoToken.OP_NOT, term,line,column);
+                    } else {
+                        throw new OniclaLexicalException("Unrecognized Symbol");
+                    }
+                case 8:
+                    if(currentChar >= (char) 32 && currentChar <= (char) 126) {
+                        term += currentChar;
+                        currentChar = nextChar();
+                        if(currentChar == '\'') {
+                            term += currentChar;
+                            state = 9;
+                        } else {
+                            back();
+                            state = 10;
+                        }
+                    } else {
+                        throw new OniclaLexicalException("Unrecognized Character");
+                    }
+                    break;
+
+                case 9:
+                    back();
+                    return new Token(TipoToken.CTE_CHAR, term,line,column);
+                case 10:
+                    if(currentChar >= (char) 32 && currentChar <= (char) 126) {
+                        term += currentChar;
+                        if(currentChar == '\'') {
+                            return new Token(TipoToken.CTE_CAD_CHARAC, term,line,column);
+                        }
+                    } else {
+                        System.out.println("ulitmo " + term);
+                        throw new OniclaLexicalException("Unrecognized CharacterArray");
+                    }
+                    break;
+                case 11:
+                    if(isCharLower(currentChar)) {
+                        term += currentChar;
+                    } else if(!isCharLower(currentChar) || isSpace(currentChar)) {
+                        back();
+                        state = 12;
+                    }
+                    break;
+                case 12:
+                    back();
+                    return new Token(hash.search(term), term, line,column);
             }
         }
     }
+    private boolean isDigit(char c) {
+        return Character.isDigit(c);
+    }
+
+    private boolean isCharUpper(char c) {
+        return Character.isUpperCase(c);
+    }
+
+    private boolean isCharLower(char c) {
+        return Character.isLowerCase(c);
+    }
+
+    private boolean isOperator(char c) {
+        return c == '>' || c == '<' || c == '=' || c == '!';
+    }
+
+    private boolean isSpace(char c) {
+        return Character.isWhitespace(c) || c == '\t' || c == '\n' || c == '\r' || c == '\f' || c == '\0' || c == '\b';
+    }
+
+    private char nextChar() {
+        column++;
+        return content[position++];
+    }
+
+    private boolean isEOF() {
+        return position == content.length;
+    }
+
+    private void back() {
+        column--;
+        position--;
+    }
+
+    private boolean nextLine(){
+        String contetTemp = " ";
+        try {
+            contetTemp = reader.readLine();
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+        if (contetTemp != null){
+            lineTxt = contetTemp;
+            lineTxt+= " ";
+            line++;
+            position = 0;
+            column = 1;
+            return true;
+
+        }
+        return false;
+    }
+
 }
