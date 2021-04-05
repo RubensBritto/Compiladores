@@ -3,7 +3,7 @@
 ## Execução do Analisador no Ubuntu
 
 
-1. Passo Possuir Pacote Java JDK 11 instalado. Caso não possua:
+1. Possuir Pacote Java JDK 11 instalado. Caso não possua:
 
 `sudo apt install openjdk-11-jre-headless`
 
