@@ -37,6 +37,7 @@ public enum TipoToken {
     PR_INPUT,
     PR_PRINT,
     PR_PRINTNL,
+    PR_PRINTL,
     PR_TRUE,
     PR_FALSE,
     PR_NULL,

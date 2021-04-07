@@ -24,8 +24,9 @@ public class KeyWordsHash {
         keyWords.put( "Characterarray", TipoToken.PR_CHARRAY);
         keyWords.put("Character", TipoToken.PR_CHARAC);
         keyWords.put("Bool", TipoToken.PR_BOOL);
-        keyWords.put( "Input", TipoToken.PR_INPUT);
+        keyWords.put("Input", TipoToken.PR_INPUT);
         keyWords.put("Print", TipoToken.PR_PRINT);
+        keyWords.put("Printl", TipoToken.PR_PRINTL);
         keyWords.put("Printnl", TipoToken.PR_PRINTNL);
         keyWords.put("True", TipoToken.PR_TRUE);
         keyWords.put("False", TipoToken.PR_FALSE);
