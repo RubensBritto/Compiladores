@@ -474,7 +474,7 @@ public class OniclaSintatico {
 
     public void fForParams() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("ForParams", "'(' 'typeInt' 'id' '=' '(' Ea ',' Ea ForStep ')' ')' Body");
+            printProduction("ForParams", "'(' 'typeInt' 'id' ':'  Ea ',' Ea ForStep ')' Body");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.PR_INTEGER)) {
@@ -486,24 +486,16 @@ public class OniclaSintatico {
                     if (checkCategory(TipoToken.OP_ATR)) {
                         System.out.println(token);
                         setNextToken();
-                        if (checkCategory(TipoToken.AB_PAR)) {
+                        fEa();
+                        if (checkCategory(TipoToken.SEP)) {
                             System.out.println(token);
                             setNextToken();
                             fEa();
-                            if (checkCategory(TipoToken.SEP)) {
+                            fForStep();
+                            if (checkCategory(TipoToken.FEC_PAR)) {
                                 System.out.println(token);
                                 setNextToken();
-                                fEa();
-                                fForStep();
-                                if (checkCategory(TipoToken.FEC_PAR)) {
-                                    System.out.println(token);
-                                    setNextToken();
-                                    if (checkCategory(TipoToken.FEC_PAR)) {
-                                        System.out.println(token);
-                                        setNextToken();
-                                        fBody();
-                                    }
-                                }
+                                fBody();
                             }
                         }
                     }
