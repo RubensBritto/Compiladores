@@ -8,7 +8,7 @@ import sintatico.OniclaSintatico;
 public class Main {
     public static void main(String[] args) {
         try {
-            String test = "D:\\Rubens_HD\\Intellij\\onicla_In\\src\\main\\ola.txt";
+            String test = "D:\\Rubens_HD\\Intellij\\onicla_In\\src\\main\\shell.txt";
             //OniclaLexico lexico = new OniclaLexico(test);
             OniclaSintatico sintatico = new OniclaSintatico(test);
 

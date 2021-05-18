@@ -1,0 +1,49 @@
+Function Void shellsort(Integer array[ ], Integer n) Begin
+		Integer h = 1, c, j;
+
+        While (h < n) Begin
+			h = h * 3 + 1;
+		End
+
+		h = h / 3;
+
+		While(h > 0) Begin
+			Repeat (Integer i = h, 1, n) Begin
+                    c = array[i];
+                    j = i;
+                    While (j >= h And array[j - h] > c) Begin
+                            array[j] = array[j - h];
+                            j = j - h;
+                    End
+                    array[j] = c;
+			End
+			h = h / 2;
+		End
+		Refound;
+	End
+
+Function Integer Main ( ) Begin
+		Integer n, v;
+		Print('Digite o tamanho do array a ser ordenado: ');
+		Input(n);
+		Integer array[n];
+
+		Print('Digite aleatoriamente os numero para serem ordenados: ');
+        Repeat (Integer i = 0, 1, n) Begin
+	        Input(array[i]);
+        End
+        Print('Valores adicionados: ');
+        Repeat (Integer i = 0, 1, n) Begin
+            v = array[i];
+	        Print(v);
+        End
+		shellsort(array[n], n);
+
+		Print('Valores ordenados: ');
+        Repeat (Integer i = 0, 1, n) Begin
+            v = array[i];
+	        Printnl(v);
+        End
+
+		Refound;
+End

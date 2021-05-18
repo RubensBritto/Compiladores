@@ -1,4 +1,4 @@
-Function Integer fibonacci(Integer as) Begin
+Function Integer fibonacci(Integer n) Begin
 		If(n < 2) Begin
 			Refound n;
 		End
@@ -8,14 +8,14 @@ Function Integer fibonacci(Integer as) Begin
 	End
 
 	Function Integer Main ( ) Begin
-		Integer n;
+		Integer n, total;
 		Print('Digite o tamanho da sequencia:');
 		Input(n);
 
-		Repeat(int i = 0, 1, n) Begin
-			Print(fibonacci(i) ^ ' ');
+		Repeat(Integer i = 0, 1, n) Begin
+		    total = fibonacci(i);
+			Print(total);
 		End
 
 		Refound;
 	End
-
