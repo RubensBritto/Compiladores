@@ -58,7 +58,7 @@ public class OniclaSintatico {
             printProduction("DeclId", "Type LId ';'");
             fType();
             fLId();
-            
+
             if (!checkCategory(TipoToken.TERMINAL)) {
             } else {
                 System.out.println(token);
@@ -424,7 +424,7 @@ public class OniclaSintatico {
                 System.out.println(token);
                 setNextToken();
                 fEb();
-                if (checkCategory(TipoToken.AB_PAR)) {
+                if (checkCategory(TipoToken.FEC_PAR)) {
                     System.out.println(token);
                     setNextToken();
                     fBody();
@@ -727,7 +727,7 @@ public class OniclaSintatico {
             System.out.println(token);
             setNextToken();
             fEc();
-            if (!checkCategory(TipoToken.AB_PAR)) {
+            if (!checkCategory(TipoToken.FEC_PAR)) {
             } else {
                 System.out.println(token);
                 setNextToken();
