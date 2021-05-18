@@ -71,6 +71,10 @@ public class OniclaSintatico {
             printProduction("Type", "'Integer'");
             System.out.println(token);
             setNextToken();
+        } else if (checkCategory(TipoToken.PR_VOID)) {
+            printProduction("Type", "'Void'");
+            System.out.println(token);
+            setNextToken();
         } else if (checkCategory(TipoToken.PR_FLOAT)) {
             printProduction("Type", "'Float'");
             System.out.println(token);
@@ -140,9 +144,9 @@ public class OniclaSintatico {
             fType();
             fFunName();
             if (checkCategory(TipoToken.AB_PAR)) {
+                System.out.println(token);
                 setNextToken();
                 fLParamDecl();
-                System.out.println(token);
 
 
                 if (checkCategory(TipoToken.FEC_PAR)) {
@@ -189,9 +193,7 @@ public class OniclaSintatico {
     }
 
     public void fLParamDecl() {
-        System.out.println(token.tipoToken);
         if (checkCategory(TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_FLOAT, TipoToken.PR_INTEGER, TipoToken.PR_CHARRAY)) {
-            System.out.println("aqui estou");
             printProduction("LParamDecl", "Type 'id' ArrayOpt LParamDeclr");
             fType();
             if (checkCategory(TipoToken.ID)) {
@@ -258,6 +260,7 @@ public class OniclaSintatico {
             fDeclId();
             fBodyPart();
         } else if (checkCategory(TipoToken.PR_PRINT,TipoToken.PR_PRINTL,TipoToken.PR_PRINTNL,TipoToken.PR_INPUT, TipoToken.PR_WHILE, TipoToken.PR_REPEAT, TipoToken.PR_IF)) {
+            System.out.println(token.lexema);
             printProduction("BodyPart", "Command BodyPart");
             fCommand();
             fBodyPart();
@@ -301,7 +304,7 @@ public class OniclaSintatico {
             setNextToken();
             fLParamCall();
             if (!checkCategory(TipoToken.FEC_PAR)) {
-          } else {
+            } else {
                 System.out.println(token);
                 setNextToken();
             }
@@ -364,7 +367,7 @@ public class OniclaSintatico {
                 System.out.println(token);
                 setNextToken();
                 //colocar o char antes
-                if (checkCategory(TipoToken.CTE_CADCHA)) {
+                if (checkCategory(TipoToken.CTE_CADCHA, TipoToken.ID)) {
                     System.out.println(token);
                     setNextToken();
                     fPrintLParam();
@@ -405,7 +408,7 @@ public class OniclaSintatico {
                 System.out.println(token);
                 setNextToken();
                 fEb();
-                if (checkCategory(TipoToken.AB_PAR)) {
+                if (checkCategory(TipoToken.FEC_PAR)) {
                     System.out.println(token);
                     setNextToken();
                     fBody();
@@ -533,11 +536,13 @@ public class OniclaSintatico {
     }
 
     public void fEcr() {
+        //setNextToken();
         if (checkCategory(TipoToken.OP_CONCAT)) {
             printProduction("Ecr", "'opConcat' Fc Ecr");
             System.out.println(token);
             setNextToken();
             fEb();
+            //setNextToken();
             fEcr();
         } else {
             printProduction("Ecr", epsilon);
