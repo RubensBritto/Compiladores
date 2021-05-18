@@ -1,0 +1,20 @@
+Function Integer fibonacci(Integer as) Begin
+		If(n < 2) Begin
+			Refound n;
+		End
+		Else Begin
+			Refound fibonacci(n - 1) + fibonacci(n - 2);
+		End
+	End
+
+	Function Integer Main ( ) Begin
+		Integer n;
+		Print('Digite o tamanho da sequencia:');
+		Input(n);
+
+		Repeat(int i = 0, 1, n) Begin
+			Print(fibonacci(i) ^ ' ');
+		End
+
+		Refound;
+	End

@@ -52,14 +52,20 @@ public class OniclaSintatico {
         }
     }
 
+
     public void fDeclId() {
         if (checkCategory(TipoToken.PR_INTEGER, TipoToken.PR_FLOAT, TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_CHARRAY)) {
             printProduction("DeclId", "Type LId ';'");
             fType();
             fLId();
+            
+            if (!checkCategory(TipoToken.TERMINAL)) {
+            } else {
+                System.out.println(token);
+                setNextToken();
+            }
         }
     }
-
     public void fType() {
         if (checkCategory(TipoToken.PR_INTEGER)) {
             printProduction("Type", "'Integer'");
@@ -134,9 +140,10 @@ public class OniclaSintatico {
             fType();
             fFunName();
             if (checkCategory(TipoToken.AB_PAR)) {
+                setNextToken();
                 fLParamDecl();
                 System.out.println(token);
-                setNextToken();
+
 
                 if (checkCategory(TipoToken.FEC_PAR)) {
                     System.out.println(token);
@@ -182,7 +189,9 @@ public class OniclaSintatico {
     }
 
     public void fLParamDecl() {
+        System.out.println(token.tipoToken);
         if (checkCategory(TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_FLOAT, TipoToken.PR_INTEGER, TipoToken.PR_CHARRAY)) {
+            System.out.println("aqui estou");
             printProduction("LParamDecl", "Type 'id' ArrayOpt LParamDeclr");
             fType();
             if (checkCategory(TipoToken.ID)) {
@@ -347,7 +356,7 @@ public class OniclaSintatico {
     }
 
     public void fCommand() {
-        if (checkCategory(TipoToken.PR_PRINT)) {
+        if (checkCategory(TipoToken.PR_PRINT ,TipoToken.PR_PRINTNL, TipoToken.PR_PRINTL)) {
             printProduction("Command", "'print' '(' 'constStr' PrintLParam ')' ';'");
             System.out.println(token);
             setNextToken();
