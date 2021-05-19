@@ -169,25 +169,25 @@ public class OniclaSintatico {
         }
     }
 
-    public void constCall() {
+    public void paramFunction() {
         if (checkCategory(TipoToken.ID, TipoToken.AB_PAR, TipoToken.OP_SUB, TipoToken.CTE_BOOL, TipoToken.CTE_CHAR, TipoToken.CTE_FLOAT, TipoToken.CTE_INT, TipoToken.CTE_CADCHA)) {
-            printProduction("ConstCall", "Ec ConstCall_LL");
+            printProduction("ParamFunction", "Ec ParamFunctionLL");
             fEc();
-            constCall_LL();
+            paramFunctionLL();
         } else {
-            printProduction("ConstCall", epsilon);
+            printProduction("ParamFunction", epsilon);
         }
     }
 
-    public void constCall_LL() {
+    public void paramFunctionLL() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("ConstCall_LL", "',' Ec ConstCall_LL");
+            printProduction("ParamFunctionLL", "',' Ec ParamFunctionLL");
             System.out.println(token);
             setNextToken();
             fEc();
-            constCall_LL();
+            paramFunctionLL();
         } else {
-            printProduction("ConstCall_LL", epsilon);
+            printProduction("ParamFunctionLL", epsilon);
         }
     }
 
@@ -298,10 +298,10 @@ public class OniclaSintatico {
 
     public void fParamAttr() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("ParamAttrib", "'(' ConstCall ')'");
+            printProduction("ParamAttrib", "'(' ParamFunction ')'");
             System.out.println(token);
             setNextToken();
-            constCall();
+            paramFunction();
             if (!checkCategory(TipoToken.FEC_PAR)) {
             } else {
                 System.out.println(token);
@@ -359,7 +359,7 @@ public class OniclaSintatico {
 
     public void fCommand() {
         if (checkCategory(TipoToken.PR_PRINT ,TipoToken.PR_PRINTNL, TipoToken.PR_PRINTL)) {
-            printProduction("Command", "'print' '(' 'constStr' PrintLParam ')' ';'");
+            printProduction("Command", "'print' '(' 'constStr' PrintParam ')' ';'");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -382,13 +382,13 @@ public class OniclaSintatico {
                 }
             }
         } else if (checkCategory(TipoToken.PR_INPUT)) {
-            printProduction("Command", "'scan' '(' ScanLParam ')' ';'");
+            printProduction("Command", "'Input' '(' InputParam ')' ';'");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
                 System.out.println(token);
                 setNextToken();
-                fScanLParam();
+                inputParam();
                 if (checkCategory(TipoToken.FEC_PAR)) {
                     System.out.println(token);
                     setNextToken();
@@ -438,27 +438,27 @@ public class OniclaSintatico {
 
     public void fPrintLParam() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("PrintLParam", "',' Ec PrintLParam");
+            printProduction("PrintParam", "',' Ec PrintParam");
             System.out.println(token);
             setNextToken();
             fEc();
             fPrintLParam();
         } else {
-            printProduction("PrintLParam", epsilon);
+            printProduction("PrintParam", epsilon);
         }
     }
 
-    public void fScanLParam() {
+    public void inputParam() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("ScanLParam", "'id' ArrayOpt ScanLParamr");
+            printProduction("InputParam", "'id' ArrayOpt ScanLParamr");
             System.out.println(token);
             setNextToken();
             fArrayOpt();
-            fScanLParamr();
+            inputParamLL();
         }
     }
 
-    public void fScanLParamr() {
+    public void inputParamLL() {
         if (checkCategory(TipoToken.SEP)) {
             printProduction("ScanLParamr", "',' 'id' ArrayOpt ScanLParamr");
             System.out.println(token);
@@ -467,7 +467,7 @@ public class OniclaSintatico {
                 System.out.println(token);
                 setNextToken();
                 fArrayOpt();
-                fScanLParamr();
+                inputParamLL();
             }
         } else {
             printProduction("ScanLParamr", epsilon);
@@ -734,7 +734,7 @@ public class OniclaSintatico {
             setNextToken();
             fFa();
         } else if (checkCategory(TipoToken.ID)) {
-            fIdOrFunCall();
+            idFunctionCall();
         } else if (checkCategory(TipoToken.CTE_BOOL)) {
             printProduction("Fa", "'constBool'");
             System.out.println(token);
@@ -758,21 +758,21 @@ public class OniclaSintatico {
         }
     }
 
-    public void fIdOrFunCall() {
+    public void idFunctionCall() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("IdOrFunCall", "'id' IdOrFunCallr");
+            printProduction("IdFunctionCall", "'id' IdOrFunCallr");
             System.out.println(token);
             setNextToken();
-            fIdOrFunCallr();
+            idFunctionCall_LL();
         }
     }
 
-    public void fIdOrFunCallr() {
+    public void idFunctionCall_LL() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("IdOrFunCallr", "'(' ConstCall ')'");
+            printProduction("IdOrFunCallr", "'(' ParamFunction ')'");
             System.out.println(token);
             setNextToken();
-            constCall();
+            paramFunction();
             if (!checkCategory(TipoToken.FEC_PAR)) {
             } else {
                 System.out.println(token);
