@@ -20,6 +20,7 @@ public class OniclaSintatico {
     public void setNextToken() {
         token = lexico.nextToken();
         if(token.tipoToken == TipoToken.EOF) {
+            System.out.println(token);
             return ;
         }
     }
@@ -44,8 +45,8 @@ public class OniclaSintatico {
             fDeclId();
             FS();
         } else if (checkCategory(TipoToken.PR_FUNC)) {
-            printProduction("S", "FunDecl S");
-            fFunDecl();
+            printProduction("S", "DeclFunction S");
+            declFunction();
             FS();
         }  else {
             printProduction("S", epsilon);
@@ -136,9 +137,9 @@ public class OniclaSintatico {
         }
     }
 
-    public void fFunDecl() {
+    public void declFunction() {
         if (checkCategory(TipoToken.PR_FUNC)) {
-            printProduction("FunDecl", "'fun' Type FunName '(' LParamDecl ')' Body");
+            printProduction("DeclFunction", "'Function' FunctionType NameFunctionId '(' ConstDecl ')' InternalDecl");
             System.out.println(token);
             setNextToken();
             fType();
@@ -146,13 +147,11 @@ public class OniclaSintatico {
             if (checkCategory(TipoToken.AB_PAR)) {
                 System.out.println(token);
                 setNextToken();
-                fLParamDecl();
-
-
+                constDecl();
                 if (checkCategory(TipoToken.FEC_PAR)) {
                     System.out.println(token);
                     setNextToken();
-                    fBody();
+                    internalDecl();
                 }
             }
         }
@@ -170,46 +169,46 @@ public class OniclaSintatico {
         }
     }
 
-    public void fLParamCall() {
+    public void constCall() {
         if (checkCategory(TipoToken.ID, TipoToken.AB_PAR, TipoToken.OP_SUB, TipoToken.CTE_BOOL, TipoToken.CTE_CHAR, TipoToken.CTE_FLOAT, TipoToken.CTE_INT, TipoToken.CTE_CADCHA)) {
-            printProduction("LParamCall", "Ec LParamCallr");
+            printProduction("ConstCall", "Ec ConstCall_LL");
             fEc();
-            fLParamCallr();
+            constCall_LL();
         } else {
-            printProduction("LParamCall", epsilon);
+            printProduction("ConstCall", epsilon);
         }
     }
 
-    public void fLParamCallr() {
+    public void constCall_LL() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("LParamCallr", "',' Ec LParamCallr");
+            printProduction("ConstCall_LL", "',' Ec ConstCall_LL");
             System.out.println(token);
             setNextToken();
             fEc();
-            fLParamCallr();
+            constCall_LL();
         } else {
-            printProduction("LParamCallr", epsilon);
+            printProduction("ConstCall_LL", epsilon);
         }
     }
 
-    public void fLParamDecl() {
+    public void constDecl() {
         if (checkCategory(TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_FLOAT, TipoToken.PR_INTEGER, TipoToken.PR_CHARRAY)) {
-            printProduction("LParamDecl", "Type 'id' ArrayOpt LParamDeclr");
+            printProduction("ConstDecl", "Type 'id' ArrayOpt ConstDecl_LL");
             fType();
             if (checkCategory(TipoToken.ID)) {
                 System.out.println(token);
                 setNextToken();
                 fArrayOpt();
-                fLParamDeclr();
+                constDecl_LL();
             }
         }else {
-            printProduction("LParamDecl", epsilon);
+            printProduction("ConstDecl", epsilon);
         }
     }
 
-    public void fLParamDeclr() {
+    public void constDecl_LL() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("LParamDeclr", "',' Type 'id' ArrayOpt LParamDeclr");
+            printProduction("ConstDecl_LL", "',' Type 'id' ArrayOpt ConstDecl_LL");
             System.out.println(token);
             setNextToken();
             fType();
@@ -217,7 +216,7 @@ public class OniclaSintatico {
                 System.out.println(token);
                 setNextToken();
                 fArrayOpt();
-                fLParamDeclr();
+                constDecl_LL();
             }
         }
     }
@@ -238,13 +237,13 @@ public class OniclaSintatico {
         }
     }
 
-    public void fBody() {
+    public void internalDecl() {
         if (checkCategory(TipoToken.PR_BEGIN)) {
             ++scopeCounter;
-            printProduction("Body", "'{' BodyPart '}'");
+            printProduction("InternalDecl", "'Begin' Instructions 'End'");
             System.out.println(token);
             setNextToken();
-            fBodyPart();
+            instructions();
             if (!checkCategory(TipoToken.PR_END)) {
             } else {
                 System.out.println(token);
@@ -254,43 +253,43 @@ public class OniclaSintatico {
         }
     }
 
-    public void fBodyPart() {
+    public void instructions() {
         if (checkCategory(TipoToken.PR_INTEGER, TipoToken.PR_FLOAT, TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_CHARRAY)) {
-            printProduction("BodyPart", "DeclId BodyPart");
+            printProduction("Instructions", "DeclId Instructions");
             fDeclId();
-            fBodyPart();
+            instructions();
         } else if (checkCategory(TipoToken.PR_PRINT,TipoToken.PR_PRINTL,TipoToken.PR_PRINTNL,TipoToken.PR_INPUT, TipoToken.PR_WHILE, TipoToken.PR_REPEAT, TipoToken.PR_IF)) {
             System.out.println(token.lexema);
-            printProduction("BodyPart", "Command BodyPart");
+            printProduction("Instructions", "Command Instructions");
             fCommand();
-            fBodyPart();
+            instructions();
         } else if (checkCategory(TipoToken.ID)) {
-            printProduction("BodyPart", "BodyPartr ';' BodyPart");
-            fBodyPartr();
+            printProduction("Instructions", "instructionsLL ';' Instructions");
+            instructionsLL();
             if (!checkCategory(TipoToken.TERMINAL)) {
             } else {
                 System.out.println(token);
                 setNextToken();
             }
-            fBodyPart();
+            instructions();
         } else if (checkCategory(TipoToken.PR_REFOUND)) {
-            printProduction("BodyPart", "'return' Return ';'");
+            printProduction("Instructions", "'Refound' Return ';'");
             System.out.println(token);
             setNextToken();
-            fReturn();
+            refound();
             if (!checkCategory(TipoToken.TERMINAL)) {
             } else {
                 System.out.println(token);
                 setNextToken();
             }
         } else {
-            printProduction("BodyPart", epsilon);
+            printProduction("Instructions", epsilon);
         }
     }
 
-    public void fBodyPartr() {
+    public void instructionsLL() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("BodyPartr", "'id' ParamAttr");
+            printProduction("instructionsLL", "'id' ParamAttr");
             System.out.println(token);
             setNextToken();
             fParamAttr();
@@ -299,10 +298,10 @@ public class OniclaSintatico {
 
     public void fParamAttr() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("ParamAttrib", "'(' LParamCall ')'");
+            printProduction("ParamAttrib", "'(' ConstCall ')'");
             System.out.println(token);
             setNextToken();
-            fLParamCall();
+            constCall();
             if (!checkCategory(TipoToken.FEC_PAR)) {
             } else {
                 System.out.println(token);
@@ -349,12 +348,12 @@ public class OniclaSintatico {
         }
     }
 
-    public void fReturn() {
+    public void refound() {
         if (checkCategory(TipoToken.AB_PAR, TipoToken.OP_SUB, TipoToken.CTE_INT, TipoToken.CTE_BOOL, TipoToken.CTE_CHAR, TipoToken.CTE_FLOAT, TipoToken.CTE_CADCHA, TipoToken.ID)) {
-            printProduction("Return", "Ec");
+            printProduction("Refound", "Ec");
             fEc();
         } else {
-            printProduction("Return", epsilon);
+            printProduction("Refound", epsilon);
         }
     }
 
@@ -401,7 +400,7 @@ public class OniclaSintatico {
                 }
             }
         } else if (checkCategory(TipoToken.PR_WHILE)) {
-            printProduction("Command", "'whileLoop' '(' Eb ')' Body");
+            printProduction("Command", "'whileLoop' '(' Eb ')' InternalDecl");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -411,7 +410,7 @@ public class OniclaSintatico {
                 if (checkCategory(TipoToken.FEC_PAR)) {
                     System.out.println(token);
                     setNextToken();
-                    fBody();
+                    internalDecl();
                 }
             }
         } else if (checkCategory(TipoToken.PR_REPEAT)) {
@@ -420,7 +419,7 @@ public class OniclaSintatico {
             setNextToken();
             fForParams();
         } else if (checkCategory(TipoToken.PR_IF)) {
-            printProduction("Command", "'condIf' '(' Eb ')' Body Ifr");
+            printProduction("Command", "'condIf' '(' Eb ')' InternalDecl Ifr");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -430,7 +429,7 @@ public class OniclaSintatico {
                 if (checkCategory(TipoToken.FEC_PAR)) {
                     System.out.println(token);
                     setNextToken();
-                    fBody();
+                    internalDecl();
                     fIfr();
                 }
             }
@@ -477,7 +476,7 @@ public class OniclaSintatico {
 
     public void fForParams() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("ForParams", "'(' 'typeInt' 'id' ':'  Ea ',' Ea ForStep ')' Body");
+            printProduction("ForParams", "'(' 'typeInt' 'id' ':'  Ea ',' Ea ForStep ')' InternalDecl");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.PR_INTEGER)) {
@@ -498,7 +497,7 @@ public class OniclaSintatico {
                             if (checkCategory(TipoToken.FEC_PAR)) {
                                 System.out.println(token);
                                 setNextToken();
-                                fBody();
+                                internalDecl();
                             }
                         }
                     }
@@ -520,10 +519,10 @@ public class OniclaSintatico {
 
     public void fIfr() {
         if (checkCategory(TipoToken.PR_ELSE)) {
-            printProduction("Ifr", "'condElse' Body");
+            printProduction("Ifr", "'condElse' InternalDecl");
             System.out.println(token);
             setNextToken();
-            fBody();
+            internalDecl();
         } else {
             printProduction("Ifr", epsilon);
         }
@@ -770,10 +769,10 @@ public class OniclaSintatico {
 
     public void fIdOrFunCallr() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("IdOrFunCallr", "'(' LParamCall ')'");
+            printProduction("IdOrFunCallr", "'(' ConstCall ')'");
             System.out.println(token);
             setNextToken();
-            fLParamCall();
+            constCall();
             if (!checkCategory(TipoToken.FEC_PAR)) {
             } else {
                 System.out.println(token);
