@@ -41,7 +41,7 @@ public class OniclaLexico {
                 }
             }
             currentChar = nextChar();
-    
+
             switch(state) {
                 case 0:
                     if(isCharLower(currentChar)) {
@@ -273,7 +273,7 @@ public class OniclaLexico {
                     back();
                     if(hash.keyWords.get(term) != null) {
                         column++;
-                       return new Token(hash.keyWords.get(term), term, line, column);
+                        return new Token(hash.keyWords.get(term), term, line, column);
                     } else {
                         column++;
                         return new Token(TipoToken.ER_KEYWORD, term, line, column);

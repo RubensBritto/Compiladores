@@ -1,4 +1,4 @@
-package exceptions;
+package src.execptions;
 
 public class OniclaSintaticoException extends RuntimeException {
 

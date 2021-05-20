@@ -35,7 +35,7 @@ Function Integer Main ( ) Begin
         Print('Valores adicionados: ');
         Repeat (Integer i = 0, 1, n) Begin
             v = array[i];
-	        Print(v);
+	        Printnl(v);
         End
 		shellsort(array[n], n);
 

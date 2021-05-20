@@ -7,6 +7,7 @@ public enum TipoToken {
     CTE_INT,
     CTE_CHAR,
     CTE_CADCHA,
+    CTE_BOOL,
     OP_ATR,
     OP_REL,
     OP_AD,

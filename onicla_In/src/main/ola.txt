@@ -1,3 +1,0 @@
-Function Integer Main() Begin
-    Print('Hello Word');
-End

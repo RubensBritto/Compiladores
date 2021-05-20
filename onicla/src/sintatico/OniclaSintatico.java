@@ -1,9 +1,9 @@
-package sintatico;
+package src.sintatico;
 
 
-import lexico.OniclaLexico;
-import lexico.TipoToken;
-import lexico.Token;
+import src.lexico.OniclaLexico;
+import src.lexico.TipoToken;
+import src.lexico.Token;
 
 public class OniclaSintatico {
     private OniclaLexico lexico;

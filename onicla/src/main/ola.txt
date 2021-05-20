@@ -1,4 +1,3 @@
-Function Integer Main( ) Begin
-	Print('Alo mundo!');
-	Refound 0;
+Function Integer Main() Begin
+    Print('Hello Word');
 End
