@@ -57,7 +57,7 @@ public class OniclaSintatico {
     public void fDeclId() {
         if (checkCategory(TipoToken.PR_INTEGER, TipoToken.PR_FLOAT, TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_CHARRAY)) {
             printProduction("DeclId", "Type IdLL ';'");
-            fType();
+            FunctionType();
             fLId();
 
             if (!checkCategory(TipoToken.TERMINAL)) {
@@ -67,7 +67,7 @@ public class OniclaSintatico {
             }
         }
     }
-    public void fType() {
+    public void FunctionType() {
         if (checkCategory(TipoToken.PR_INTEGER)) {
             printProduction("Type", "'Integer'");
             System.out.println(token);
@@ -100,18 +100,18 @@ public class OniclaSintatico {
             printProduction("IdLL", "Id '=' Id_LL");
             fId();
             atrib();
-            fLIdr();
+            Id_LL();
         }
     }
 
-    public void fLIdr() {
+    public void Id_LL() {
         if (checkCategory(TipoToken.SEP)) {
             printProduction("Id_LL", "',' Id '=' Id_LL");
             System.out.println(token);
             setNextToken();
             fId();
             atrib();
-            fLIdr();
+            Id_LL();
         } else {
             printProduction("Id_LL", epsilon);
         }
@@ -142,7 +142,7 @@ public class OniclaSintatico {
             printProduction("DeclFunction", "'Function' FunctionType NameFunctionId '(' ConstDecl ')' InternalDecl");
             System.out.println(token);
             setNextToken();
-            fType();
+            FunctionType();
             nameFunction();
             if (checkCategory(TipoToken.AB_PAR)) {
                 System.out.println(token);
@@ -194,7 +194,7 @@ public class OniclaSintatico {
     public void constDecl() {
         if (checkCategory(TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_FLOAT, TipoToken.PR_INTEGER, TipoToken.PR_CHARRAY)) {
             printProduction("ConstDecl", "Type 'id' VectorType ConstDecl_LL");
-            fType();
+            FunctionType();
             if (checkCategory(TipoToken.ID)) {
                 System.out.println(token);
                 setNextToken();
@@ -211,7 +211,7 @@ public class OniclaSintatico {
             printProduction("ConstDecl_LL", "',' Type 'id' VectorType ConstDecl_LL");
             System.out.println(token);
             setNextToken();
-            fType();
+            FunctionType();
             if (checkCategory(TipoToken.ID)) {
                 System.out.println(token);
                 setNextToken();
