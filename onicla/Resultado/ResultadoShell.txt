@@ -1,0 +1,75 @@
+   1  Function Void shellsort(Integer array[ ], Integer n) Begin
+          S = DeclFunction S
+          DeclFunction = 'Function' FunctionType NameFunctionId '(' ConstDecl ')' InternalDecl
+          [0001, 0001] (0023,              PR_FUNC) {Function}
+          Type = 'Void'
+          [0001, 0002] (0043,              PR_VOID) {Void}
+          nameFunction = 'id'
+          [0001, 0003] (0001,                   ID) {shellsort}
+          [0001, 0004] (0045,               AB_PAR) {(}
+          ConstDecl = Type 'id' VectorType ConstDecl_LL
+          Type = 'Integer'
+          [0001, 0005] (0029,           PR_INTEGER) {Integer}
+          [0001, 0006] (0001,                   ID) {array}
+          VectorType = '[' Ea ']'
+          [0001, 0007] (0047,               AB_COL) {[}
+          Ea = Ta EaLL
+          Ta = Pa TaLL
+          Pa = Fa PaLL
+          PaLL = epsilon
+          TaLL = epsilon
+          EaLL = epsilon
+          [0001, 0008] (0048,              FEC_COL) {]}
+          ConstDecl_LL = ',' Type 'id' VectorType ConstDecl_LL
+          [0001, 0009] (0050,                  SEP) {,}
+          Type = 'Integer'
+          [0001, 0010] (0029,           PR_INTEGER) {Integer}
+          [0001, 0011] (0001,                   ID) {n}
+          VectorType = epsilon
+          [0001, 0012] (0046,              FEC_PAR) {)}
+          InternalDecl = 'Begin' Instructions 'End'
+          [0001, 0013] (0041,             PR_BEGIN) {Begin}
+   2  		Integer h = 1, c, j;
+          Instructions = DeclId Instructions
+          DeclId = Type IdLL ';'
+          Type = 'Integer'
+          [0002, 0001] (0029,           PR_INTEGER) {Integer}
+          IdLL = Id '=' Id_LL
+          Id = 'id' VectorType
+          [0002, 0002] (0001,                   ID) {h}
+          VectorType = epsilon
+          = = '=' Ec
+          [0002, 0003] (0007,               OP_ATR) {=}
+          Ec = Fc EcLL
+          Eb = Tb EbLL
+          Tb = Fb TbLL
+          Fb = Ra FbLL
+          Ra = Ea RaLL
+          Ea = Ta EaLL
+          Ta = Pa TaLL
+          Pa = Fa PaLL
+          Fa = 'CTE_INT'
+          [0002, 0004] (0003,              CTE_INT) {1}
+          PaLL = epsilon
+          TaLL = epsilon
+          EaLL = epsilon
+          RaLL = epsilon
+          FbLL = epsilon
+          TbLL = epsilon
+          EbLL = epsilon
+          EcLL = epsilon
+          Id_LL = ',' Id '=' Id_LL
+          [0002, 0005] (0050,                  SEP) {,}
+          Id = 'id' VectorType
+          [0002, 0006] (0001,                   ID) {c}
+          VectorType = epsilon
+          = = epsilon
+          Id_LL = ',' Id '=' Id_LL
+          [0002, 0007] (0050,                  SEP) {,}
+          Id = 'id' VectorType
+          [0002, 0008] (0001,                   ID) {j}
+          VectorType = epsilon
+          = = epsilon
+          Id_LL = epsilon
+          [0002, 0009] (0049,             TERMINAL) {;}
+Erro generico

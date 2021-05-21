@@ -9,7 +9,7 @@ public class OniclaSintatico {
     private OniclaLexico lexico;
     private Token token;
     private int scopeCounter = 0;
-    private String epsilon = "e";
+    private String epsilon = "epsilon";
 
     public OniclaSintatico(String a) {
         lexico = new OniclaLexico(a);

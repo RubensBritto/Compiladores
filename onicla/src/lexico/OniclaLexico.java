@@ -325,6 +325,7 @@ public class OniclaLexico {
     }
 
     private boolean nextLine() {
+
         String contetTemp = " ";
         try {
             contetTemp = reader.readLine();
@@ -333,8 +334,10 @@ public class OniclaLexico {
         }
         if(contetTemp != null) {
             lineTxt = contetTemp;
-            printCodeLine(lineTxt);
-            lineTxt += " ";
+            if(!lineTxt.matches("\s*")){
+                printCodeLine(lineTxt);
+                lineTxt += " ";
+            }
             line++;
             position = 0;
             column = 0;
@@ -343,4 +346,5 @@ public class OniclaLexico {
         }
         return false;
     }
+
 }

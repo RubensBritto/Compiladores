@@ -7,23 +7,23 @@
           nameFunction = 'main'
           [0001, 0003] (0044,              PR_MAIN) {Main}
           [0001, 0004] (0045,               AB_PAR) {(}
-          ConstDecl = e
+          ConstDecl = epsilon
           [0001, 0005] (0046,              FEC_PAR) {)}
           InternalDecl = 'Begin' Instructions 'End'
           [0001, 0006] (0041,             PR_BEGIN) {Begin}
-   2      Print('Hello Word');
+   2      Print('Alo Mundo');
 Print
           Instructions = Command Instructions
           Command = 'print' '(' 'CTE_CADCHA' PrintParam ')' ';'
           [0002, 0001] (0035,             PR_PRINT) {Print}
           [0002, 0002] (0045,               AB_PAR) {(}
-          [0002, 0003] (0005,           CTE_CADCHA) {'Hello Word'}
-          PrintParam = e
+          [0002, 0003] (0005,           CTE_CADCHA) {'Alo Mundo'}
+          PrintParam = epsilon
           [0002, 0004] (0046,              FEC_PAR) {)}
           [0002, 0005] (0049,             TERMINAL) {;}
    3  End
-          Instructions = e
+          Instructions = epsilon
           [0003, 0001] (0042,               PR_END) {End}
           [0003, 0001] (0000,                  EOF) {EOF}
-          S = e
+          S = epsilon
 Sucesso 
