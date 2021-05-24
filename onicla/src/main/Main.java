@@ -7,17 +7,17 @@ import src.sintatico.OniclaSintatico;
 public class Main {
     public static void main(String[] args) {
         try {
-            //String test = "/home/jose/Ufal/5_periodo/Compiladores/Compiladores/onicla/src/main/ola.txt";
+            String test = "C:\\Users\\ramon\\Desktop\\Compiladores\\onicla\\src\\main\\fibonacci.txt";
             //OniclaLexico lexico = new OniclaLexico(test);
-            OniclaSintatico sintatico = new OniclaSintatico(args[0]);
+            OniclaSintatico sintatico = new OniclaSintatico(test);
 
-            System.out.println("Sucesso ");
+            System.out.println("Success ");
         } catch (OniclaLexicalException ex) {
-            System.out.println("Lexico erro " + ex.getMessage());
+            System.out.println("Lexical Error " + ex.getMessage());
         } catch (OniclaSintaticoException ex){
             System.out.println("Syntax Error " +ex.getMessage());
         } catch (Exception ex) {
-            System.out.println("Erro generico");
+            System.out.println("Generic Error");
         }
     }
 }
