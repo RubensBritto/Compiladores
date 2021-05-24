@@ -420,7 +420,7 @@ public class OniclaSintatico {
             setNextToken();
             repeat();
         } else if (checkCategory(TipoToken.PR_IF)) {
-            printGrammar("Command", "'PR_IF' '(' Eb ')' InternalDecl Ifr");
+            printGrammar("Command", "'PR_IF' '(' Eb ')' InternalDecl IfLL");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -520,12 +520,12 @@ public class OniclaSintatico {
 
     public void fIfLL() {
         if (checkCategory(TipoToken.PR_ELSE)) {
-            printGrammar("Ifr", "'PR_ELSE' InternalDecl");
+            printGrammar("IfLL", "'PR_ELSE' InternalDecl");
             System.out.println(token);
             setNextToken();
             internalDecl();
         } else {
-            printGrammar("Ifr", epsilon);
+            printGrammar("IfLL", epsilon);
         }
     }
 
