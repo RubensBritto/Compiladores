@@ -1,0 +1,28 @@
+   1  Function Integer Main() Begin
+          S = DeclFunction S
+          DeclFunction = 'Function' FunctionType NameFunctionId '(' ConstDecl ')' InternalDecl
+          [0001, 0009] (0023,              PR_FUNC) {Function}
+          Type = 'Integer'
+          [0001, 0018] (0029,           PR_INTEGER) {Integer}
+          nameFunction = 'main'
+          [0001, 0024] (0044,              PR_MAIN) {Main}
+          [0001, 0026] (0045,               AB_PAR) {(}
+          ConstDecl = epsilon
+          [0001, 0028] (0046,              FEC_PAR) {)}
+          InternalDecl = 'Begin' Instructions 'End'
+          [0001, 0035] (0041,             PR_BEGIN) {Begin}
+   2      Print('Alo Mundo');
+          Instructions = Command Instructions
+          Command = 'print' '(' 'CTE_CADCHA' PrintParam ')' ';'
+          [0002, 0010] (0035,             PR_PRINT) {Print}
+          [0002, 0012] (0045,               AB_PAR) {(}
+          [0002, 0024] (0005,           CTE_CADCHA) {'Alo Mundo'}
+          PrintParam = epsilon
+          [0002, 0026] (0046,              FEC_PAR) {)}
+          [0002, 0028] (0049,             TERMINAL) {;}
+   3  End
+          Instructions = epsilon
+          [0003, 0004] (0042,               PR_END) {End}
+          [0003, 0005] (0000,                  EOF) {EOF}
+          S = epsilon
+Success 

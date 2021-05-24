@@ -7,9 +7,9 @@ import src.sintatico.OniclaSintatico;
 public class Main {
     public static void main(String[] args) {
         try {
-            String test = "C:\\Users\\ramon\\Desktop\\Compiladores\\onicla\\src\\main\\fibonacci.txt";
+            //String test = "C:\\Users\\ramon\\Desktop\\Compiladores\\onicla\\src\\main\\fibonacci.txt";
             //OniclaLexico lexico = new OniclaLexico(test);
-            OniclaSintatico sintatico = new OniclaSintatico(test);
+            OniclaSintatico sintatico = new OniclaSintatico(args[0]);
 
             System.out.println("Success ");
         } catch (OniclaLexicalException ex) {
