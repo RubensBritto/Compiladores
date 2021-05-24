@@ -334,10 +334,9 @@ public class OniclaLexico {
         }
         if(contetTemp != null) {
             lineTxt = contetTemp;
-            if(!lineTxt.matches("\s*")){
-                printCodeLine(lineTxt);
-                lineTxt += " ";
-            }
+            printCodeLine(lineTxt);
+            lineTxt += " ";
+            
             line++;
             position = 0;
             column = 0;
