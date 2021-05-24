@@ -33,29 +33,29 @@ public class OniclaSintatico {
         return false;
     }
 
-    public void printProduction(String left, String right) {
+    public void printGrammar(String left, String right) {
         String format = "%10s%s = %s";
         System.out.println(String.format(format, "", left, right));
     }
 
     public void FS() {
         if (checkCategory(TipoToken.PR_INTEGER, TipoToken.PR_FLOAT, TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_CHARRAY)) {
-            printProduction("S", "DeclId S");
-            fDeclId();
+            printGrammar("S", "DeclId S");
+            declId();
             FS();
         } else if (checkCategory(TipoToken.PR_FUNC)) {
-            printProduction("S", "DeclFunction S");
+            printGrammar("S", "DeclFunction S");
             declFunction();
             FS();
         }  else {
-            printProduction("S", epsilon);
+            printGrammar("S", epsilon);
         }
     }
 
 
-    public void fDeclId() {
+    public void declId() {
         if (checkCategory(TipoToken.PR_INTEGER, TipoToken.PR_FLOAT, TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_CHARRAY)) {
-            printProduction("DeclId", "Type IdLL ';'");
+            printGrammar("DeclId", "Type IdLL ';'");
             FunctionType();
             fLId();
 
@@ -67,27 +67,27 @@ public class OniclaSintatico {
     }
     public void FunctionType() {
         if (checkCategory(TipoToken.PR_INTEGER)) {
-            printProduction("Type", "'Integer'");
+            printGrammar("Type", "'Integer'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.PR_VOID)) {
-            printProduction("Type", "'Void'");
+            printGrammar("Type", "'Void'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.PR_FLOAT)) {
-            printProduction("Type", "'Float'");
+            printGrammar("Type", "'Float'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.PR_BOOL)) {
-            printProduction("Type", "'Bool'");
+            printGrammar("Type", "'Bool'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.PR_CHARAC)) {
-            printProduction("Type", "'Character'");
+            printGrammar("Type", "'Character'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.PR_CHARRAY)) {
-            printProduction("Type", "'Characterarray'");
+            printGrammar("Type", "'Characterarray'");
             System.out.println(token);
             setNextToken();
         }
@@ -95,7 +95,7 @@ public class OniclaSintatico {
 
     public void fLId() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("IdLL", "Id '=' Id_LL");
+            printGrammar("IdLL", "Id '=' Id_LL");
             fId();
             atrib();
             Id_LL();
@@ -104,20 +104,20 @@ public class OniclaSintatico {
 
     public void Id_LL() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("Id_LL", "',' Id '=' Id_LL");
+            printGrammar("Id_LL", "',' Id '=' Id_LL");
             System.out.println(token);
             setNextToken();
             fId();
             atrib();
             Id_LL();
         } else {
-            printProduction("Id_LL", epsilon);
+            printGrammar("Id_LL", epsilon);
         }
     }
 
     public void fId() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("Id", "'id' VectorType");
+            printGrammar("Id", "'id' VectorType");
             System.out.println(token);
             setNextToken();
             vectorType();
@@ -126,18 +126,18 @@ public class OniclaSintatico {
 
     public void atrib() {
         if (checkCategory(TipoToken.OP_ATR)) {
-            printProduction("=", "'=' Ec");
+            printGrammar("=", "'=' Ec");
             System.out.println(token);
             setNextToken();
             fEc();
         } else {
-            printProduction("=", epsilon);
+            printGrammar("=", epsilon);
         }
     }
 
     public void declFunction() {
         if (checkCategory(TipoToken.PR_FUNC)) {
-            printProduction("DeclFunction", "'Function' FunctionType NameFunctionId '(' ConstDecl ')' InternalDecl");
+            printGrammar("DeclFunction", "'Function' FunctionType NameFunctionId '(' ConstDecl ')' InternalDecl");
             System.out.println(token);
             setNextToken();
             FunctionType();
@@ -157,11 +157,11 @@ public class OniclaSintatico {
 
     public void nameFunction() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("nameFunction", "'id'");
+            printGrammar("nameFunction", "'id'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.PR_MAIN)) {
-            printProduction("nameFunction", "'main'");
+            printGrammar("nameFunction", "'main'");
             System.out.println(token);
             setNextToken();
         }
@@ -169,29 +169,29 @@ public class OniclaSintatico {
 
     public void paramFunction() {
         if (checkCategory(TipoToken.ID, TipoToken.AB_PAR, TipoToken.OP_SUB, TipoToken.CTE_BOOL, TipoToken.CTE_CHAR, TipoToken.CTE_FLOAT, TipoToken.CTE_INT, TipoToken.CTE_CADCHA)) {
-            printProduction("ParamFunction", "Ec ParamFunctionLL");
+            printGrammar("ParamFunction", "Ec ParamFunctionLL");
             fEc();
             paramFunctionLL();
         } else {
-            printProduction("ParamFunction", epsilon);
+            printGrammar("ParamFunction", epsilon);
         }
     }
 
     public void paramFunctionLL() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("ParamFunctionLL", "',' Ec ParamFunctionLL");
+            printGrammar("ParamFunctionLL", "',' Ec ParamFunctionLL");
             System.out.println(token);
             setNextToken();
             fEc();
             paramFunctionLL();
         } else {
-            printProduction("ParamFunctionLL", epsilon);
+            printGrammar("ParamFunctionLL", epsilon);
         }
     }
 
     public void constDecl() {
         if (checkCategory(TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_FLOAT, TipoToken.PR_INTEGER, TipoToken.PR_CHARRAY)) {
-            printProduction("ConstDecl", "Type 'id' VectorType ConstDecl_LL");
+            printGrammar("ConstDecl", "Type 'id' VectorType ConstDecl_LL");
             FunctionType();
             if (checkCategory(TipoToken.ID)) {
                 System.out.println(token);
@@ -200,13 +200,13 @@ public class OniclaSintatico {
                 constDecl_LL();
             }
         }else {
-            printProduction("ConstDecl", epsilon);
+            printGrammar("ConstDecl", epsilon);
         }
     }
 
     public void constDecl_LL() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("ConstDecl_LL", "',' Type 'id' VectorType ConstDecl_LL");
+            printGrammar("ConstDecl_LL", "',' Type 'id' VectorType ConstDecl_LL");
             System.out.println(token);
             setNextToken();
             FunctionType();
@@ -221,7 +221,7 @@ public class OniclaSintatico {
 
     public void vectorType() {
         if (checkCategory(TipoToken.AB_COL)) {
-            printProduction("VectorType", "'[' Ea ']'");
+            printGrammar("VectorType", "'[' Ea ']'");
             System.out.println(token);
             setNextToken();
             fEa();
@@ -230,13 +230,13 @@ public class OniclaSintatico {
                 setNextToken();
             }
         } else {
-            printProduction("VectorType", epsilon);
+            printGrammar("VectorType", epsilon);
         }
     }
 
     public void internalDecl() {
         if (checkCategory(TipoToken.PR_BEGIN)) {
-            printProduction("InternalDecl", "'Begin' Instructions 'End'");
+            printGrammar("InternalDecl", "'Begin' Instructions 'End'");
             System.out.println(token);
             setNextToken();
             instructions();
@@ -249,15 +249,15 @@ public class OniclaSintatico {
 
     public void instructions() {
         if (checkCategory(TipoToken.PR_INTEGER, TipoToken.PR_FLOAT, TipoToken.PR_BOOL, TipoToken.PR_CHARAC, TipoToken.PR_CHARRAY)) {
-            printProduction("Instructions", "DeclId Instructions");
-            fDeclId();
+            printGrammar("Instructions", "DeclId Instructions");
+            declId();
             instructions();
         } else if (checkCategory(TipoToken.PR_PRINT,TipoToken.PR_PRINTL,TipoToken.PR_PRINTNL,TipoToken.PR_INPUT, TipoToken.PR_WHILE, TipoToken.PR_REPEAT, TipoToken.PR_IF)) {
-            printProduction("Instructions", "Command Instructions");
+            printGrammar("Instructions", "Command Instructions");
             command();
             instructions();
         } else if (checkCategory(TipoToken.ID)) {
-            printProduction("Instructions", "instructionsLL ';' Instructions");
+            printGrammar("Instructions", "instructionsLL ';' Instructions");
             instructionsLL();
             if (checkCategory(TipoToken.TERMINAL)) {
                 System.out.println(token);
@@ -265,7 +265,7 @@ public class OniclaSintatico {
             }
             instructions();
         } else if (checkCategory(TipoToken.PR_REFOUND)) {
-            printProduction("Instructions", "'Refound' Return ';'");
+            printGrammar("Instructions", "'Refound' Return ';'");
             System.out.println(token);
             setNextToken();
             refound();
@@ -274,13 +274,13 @@ public class OniclaSintatico {
                 setNextToken();
             }
         } else {
-            printProduction("Instructions", epsilon);
+            printGrammar("Instructions", epsilon);
         }
     }
 
     public void instructionsLL() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("instructionsLL", "'id' ParamAtrib");
+            printGrammar("instructionsLL", "'id' ParamAtrib");
             System.out.println(token);
             setNextToken();
             paramAtrib();
@@ -289,7 +289,7 @@ public class OniclaSintatico {
 
     public void paramAtrib() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("ParamAtrib", "'(' ParamFunction ')'");
+            printGrammar("ParamAtrib", "'(' ParamFunction ')'");
             System.out.println(token);
             setNextToken();
             paramFunction();
@@ -298,13 +298,13 @@ public class OniclaSintatico {
                 setNextToken();
             }
         } else if (checkCategory(TipoToken.OP_ATR)) {
-            printProduction("Atrib", "'=' Ec Atrib");
+            printGrammar("Atrib", "'=' Ec Atrib");
             System.out.println(token);
             setNextToken();
             fEc();
             lAtrib();
         } else if (checkCategory(TipoToken.AB_COL)) {
-            printProduction("ParamAtrib", "'[' Ea ']' '=' Ec Atrib");
+            printGrammar("ParamAtrib", "'[' Ea ']' '=' Ec Atrib");
             System.out.println(token);
             setNextToken();
             fEa();
@@ -323,7 +323,7 @@ public class OniclaSintatico {
 
     public void lAtrib() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("Atrib", "',' Id '=' Ec Atrib");
+            printGrammar("Atrib", "',' Id '=' Ec Atrib");
             System.out.println(token);
             setNextToken();
             fId();
@@ -334,22 +334,22 @@ public class OniclaSintatico {
                 lAtrib();
             }
         } else {
-            printProduction("Atrib", epsilon);
+            printGrammar("Atrib", epsilon);
         }
     }
 
     public void refound() {
         if (checkCategory(TipoToken.AB_PAR, TipoToken.OP_SUB, TipoToken.CTE_INT, TipoToken.CTE_BOOL, TipoToken.CTE_CHAR, TipoToken.CTE_FLOAT, TipoToken.CTE_CADCHA, TipoToken.ID)) {
-            printProduction("Refound", "Ec");
+            printGrammar("Refound", "Ec");
             fEc();
         } else {
-            printProduction("Refound", epsilon);
+            printGrammar("Refound", epsilon);
         }
     }
 
     public void command() {
         if (checkCategory(TipoToken.PR_PRINT ,TipoToken.PR_PRINTNL, TipoToken.PR_PRINTL)) {
-            printProduction("Command", "'print' '(' 'CTE_CADCHA' PrintParam ')' ';'");
+            printGrammar("Command", "'print' '(' 'CTE_CADCHA' PrintParam ')' ';'");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -384,7 +384,7 @@ public class OniclaSintatico {
                 }
             }
         } else if (checkCategory(TipoToken.PR_INPUT)) {
-            printProduction("Command", "'Input' '(' InputParam ')' ';'");
+            printGrammar("Command", "'Input' '(' InputParam ')' ';'");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -401,7 +401,7 @@ public class OniclaSintatico {
                 }
             }
         } else if (checkCategory(TipoToken.PR_WHILE)) {
-            printProduction("Command", "'PR_WHILE' '(' Eb ')' InternalDecl");
+            printGrammar("Command", "'PR_WHILE' '(' Eb ')' InternalDecl");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -415,12 +415,12 @@ public class OniclaSintatico {
                 }
             }
         } else if (checkCategory(TipoToken.PR_REPEAT)) {
-            printProduction("Command", "'Repeat' repeatParams");
+            printGrammar("Command", "'Repeat' repeatParams");
             System.out.println(token);
             setNextToken();
             repeat();
         } else if (checkCategory(TipoToken.PR_IF)) {
-            printProduction("Command", "'PR_IF' '(' Eb ')' InternalDecl Ifr");
+            printGrammar("Command", "'PR_IF' '(' Eb ')' InternalDecl Ifr");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.AB_PAR)) {
@@ -439,19 +439,19 @@ public class OniclaSintatico {
 
     public void printParam() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("PrintParam", "',' Ec PrintParam");
+            printGrammar("PrintParam", "',' Ec PrintParam");
             System.out.println(token);
             setNextToken();
             fEc();
             printParam();
         } else {
-            printProduction("PrintParam", epsilon);
+            printGrammar("PrintParam", epsilon);
         }
     }
 
     public void inputParam() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("InputParam", "'id' VectorType InputParamLL");
+            printGrammar("InputParam", "'id' VectorType InputParamLL");
             System.out.println(token);
             setNextToken();
             vectorType();
@@ -461,7 +461,7 @@ public class OniclaSintatico {
 
     public void inputParamLL() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("InputParamLL", "',' 'id' VectorType InputParamLL");
+            printGrammar("InputParamLL", "',' 'id' VectorType InputParamLL");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.ID)) {
@@ -471,13 +471,13 @@ public class OniclaSintatico {
                 inputParamLL();
             }
         } else {
-            printProduction("InputParamLL", epsilon);
+            printGrammar("InputParamLL", epsilon);
         }
     }
 
     public void repeat() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("Repeat", "'(' Integer 'id' '='  Ea ',' Ea repeatStep ')' InternalDecl");
+            printGrammar("Repeat", "'(' Integer 'id' '='  Ea ',' Ea repeatStep ')' InternalDecl");
             System.out.println(token);
             setNextToken();
             if (checkCategory(TipoToken.PR_INTEGER)) {
@@ -509,28 +509,28 @@ public class OniclaSintatico {
 
     public void repeatStep() {
         if (checkCategory(TipoToken.SEP)) {
-            printProduction("repeatStep", "',' Ea");
+            printGrammar("repeatStep", "',' Ea");
             System.out.println(token);
             setNextToken();
             fEa();
         } else {
-            printProduction("repeatStep", epsilon);
+            printGrammar("repeatStep", epsilon);
         }
     }
 
     public void fIfLL() {
         if (checkCategory(TipoToken.PR_ELSE)) {
-            printProduction("Ifr", "'PR_ELSE' InternalDecl");
+            printGrammar("Ifr", "'PR_ELSE' InternalDecl");
             System.out.println(token);
             setNextToken();
             internalDecl();
         } else {
-            printProduction("Ifr", epsilon);
+            printGrammar("Ifr", epsilon);
         }
     }
 
     public void fEc() {
-        printProduction("Ec", "Fc EcLL");
+        printGrammar("Ec", "Fc EcLL");
         fEb();
         EcLL();
     }
@@ -538,61 +538,61 @@ public class OniclaSintatico {
     public void EcLL() {
         //setNextToken();
         if (checkCategory(TipoToken.OP_CONCAT)) {
-            printProduction("EcLL", "'OP_CONCAT' Fc EcLL");
+            printGrammar("EcLL", "'OP_CONCAT' Fc EcLL");
             System.out.println(token);
             setNextToken();
             fEb();
             //setNextToken();
             EcLL();
         } else {
-            printProduction("EcLL", epsilon);
+            printGrammar("EcLL", epsilon);
         }
     }
 
     public void fEb() {
-        printProduction("Eb", "Tb EbLL");
+        printGrammar("Eb", "Tb EbLL");
         fTb();
         EbLL();
     }
 
     public void EbLL() {
         if (checkCategory(TipoToken.PR_OR)) {
-            printProduction("EbLL", "'PR_OR' Tb EbLL");
+            printGrammar("EbLL", "'PR_OR' Tb EbLL");
             System.out.println(token);
             setNextToken();
             fTb();
             EbLL();
         } else {
-            printProduction("EbLL", epsilon);
+            printGrammar("EbLL", epsilon);
         }
     }
 
     public void fTb() {
-        printProduction("Tb", "Fb TbLL");
+        printGrammar("Tb", "Fb TbLL");
         fFb();
         TbLL();
     }
 
     public void TbLL() {
         if (checkCategory(TipoToken.PR_AND)) {
-            printProduction("TbLL", "'PR_AND' Fb TbLL");
+            printGrammar("TbLL", "'PR_AND' Fb TbLL");
             System.out.println(token);
             setNextToken();
             fFb();
             TbLL();
         } else {
-            printProduction("TbLL", epsilon);
+            printGrammar("TbLL", epsilon);
         }
     }
 
     public void fFb() {
         if (checkCategory(TipoToken.OP_NOT)) {
-            printProduction("Fb", "'OP_NOT' Fb");
+            printGrammar("Fb", "'OP_NOT' Fb");
             System.out.println(token);
             setNextToken();
             fFb();
         } else if (checkCategory(TipoToken.AB_PAR, TipoToken.OP_SUB, TipoToken.CTE_INT, TipoToken.CTE_BOOL, TipoToken.CTE_CHAR, TipoToken.CTE_FLOAT, TipoToken.CTE_CADCHA, TipoToken.ID)) {
-            printProduction("Fb", "Ra FbLL");
+            printGrammar("Fb", "Ra FbLL");
             fRa();
             FbLL();
         }
@@ -600,121 +600,121 @@ public class OniclaSintatico {
 
     public void FbLL() {
         if (checkCategory(TipoToken.OP_GREATER)) {
-            printProduction("FbLL", "'OP_GREAT' Ra FbLL");
+            printGrammar("FbLL", "'OP_GREAT' Ra FbLL");
             System.out.println(token);
             setNextToken();
             fRa();
             FbLL();
         } else if (checkCategory(TipoToken.OP_LESS)) {
-            printProduction("FbLL", "'OP_LESS' Ra FbLL");
+            printGrammar("FbLL", "'OP_LESS' Ra FbLL");
             System.out.println(token);
             setNextToken();
             fRa();
             FbLL();
         } else if (checkCategory(TipoToken.OP_GREATEQ)) {
-            printProduction("FbLL", "'OP_GREATEQ' Ra FbLL");
+            printGrammar("FbLL", "'OP_GREATEQ' Ra FbLL");
             System.out.println(token);
             setNextToken();
             fRa();
             FbLL();
         } else if (checkCategory(TipoToken.OP_LESSEQ)) {
-            printProduction("FbLL", "'OP_LESSEQ' Ra FbLL");
+            printGrammar("FbLL", "'OP_LESSEQ' Ra FbLL");
             System.out.println(token);
             setNextToken();
             fRa();
             FbLL();
         } else {
-            printProduction("FbLL", epsilon);
+            printGrammar("FbLL", epsilon);
         }
     }
 
     public void fRa() {
-        printProduction("Ra", "Ea RaLL");
+        printGrammar("Ra", "Ea RaLL");
         fEa();
         RaLL();
     }
 
     public void RaLL() {
         if (checkCategory(TipoToken.OP_REL)) {
-            printProduction("RaLL", "'OP_REL' Ea RaLL");
+            printGrammar("RaLL", "'OP_REL' Ea RaLL");
             System.out.println(token);
             setNextToken();
             fEa();
             RaLL();
         } else {
-            printProduction("RaLL", epsilon);
+            printGrammar("RaLL", epsilon);
         }
     }
 
     public void fEa() {
-        printProduction("Ea", "Ta EaLL");
+        printGrammar("Ea", "Ta EaLL");
         fTa();
         EaLL();
     }
 
     public void EaLL() {
         if (checkCategory(TipoToken.OP_AD)) {
-            printProduction("EaLL", "'OP_AD' Ta EaLL");
+            printGrammar("EaLL", "'OP_AD' Ta EaLL");
             System.out.println(token);
             setNextToken();
             fTa();
             EaLL();
         } else if (checkCategory(TipoToken.OP_SUB)) {
-            printProduction("EaLL", "'OP_SUB' Ta EaLL");
+            printGrammar("EaLL", "'OP_SUB' Ta EaLL");
             System.out.println(token);
             setNextToken();
             fTa();
             EaLL();
         } else {
-            printProduction("EaLL", epsilon);
+            printGrammar("EaLL", epsilon);
         }
     }
 
     public void fTa() {
-        printProduction("Ta", "Pa TaLL");
+        printGrammar("Ta", "Pa TaLL");
         fPa();
         TaLL();
     }
 
     public void TaLL() {
         if (checkCategory(TipoToken.OP_MULT)) {
-            printProduction("TaLL", "'OP_MULT' Pa TaLL");
+            printGrammar("TaLL", "'OP_MULT' Pa TaLL");
             System.out.println(token);
             setNextToken();
             fPa();
             TaLL();
         } else if (checkCategory(TipoToken.OP_DIV)) {
-            printProduction("TaLL", "'OP_DIV' Pa TaLL");
+            printGrammar("TaLL", "'OP_DIV' Pa TaLL");
             System.out.println(token);
             setNextToken();
             fPa();
             TaLL();
         } else {
-            printProduction("TaLL", epsilon);
+            printGrammar("TaLL", epsilon);
         }
     }
 
     public void fPa() {
-        printProduction("Pa", "Fa PaLL");
+        printGrammar("Pa", "Fa PaLL");
         fFa();
         PaLL();
     }
 
     public void PaLL() {
         if (checkCategory(TipoToken.OP_RES)) {
-            printProduction("PaLL", "'OP_RES' Fa PaLL");
+            printGrammar("PaLL", "'OP_RES' Fa PaLL");
             System.out.println(token);
             setNextToken();
             fFa();
             PaLL();
         } else {
-            printProduction("PaLL", epsilon);
+            printGrammar("PaLL", epsilon);
         }
     }
 
     public void fFa() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("Fa", "'(' Ec ')'");
+            printGrammar("Fa", "'(' Ec ')'");
             System.out.println(token);
             setNextToken();
             fEc();
@@ -723,30 +723,30 @@ public class OniclaSintatico {
                 setNextToken();
             }
         } else if (checkCategory(TipoToken.OP_SUB)) {
-            printProduction("Fa", "'OP_SUB' Fa");
+            printGrammar("Fa", "'OP_SUB' Fa");
             System.out.println(token);
             setNextToken();
             fFa();
         } else if (checkCategory(TipoToken.ID)) {
             idFunctionCall();
         } else if (checkCategory(TipoToken.CTE_BOOL)) {
-            printProduction("Fa", "'CTE_BOOL'");
+            printGrammar("Fa", "'CTE_BOOL'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.CTE_CHAR)) {
-            printProduction("Fa", "'CTE_CHAR'");
+            printGrammar("Fa", "'CTE_CHAR'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.CTE_FLOAT)) {
-            printProduction("Fa", "'CTE_FLOAT'");
+            printGrammar("Fa", "'CTE_FLOAT'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.CTE_INT)) {
-            printProduction("Fa", "'CTE_INT'");
+            printGrammar("Fa", "'CTE_INT'");
             System.out.println(token);
             setNextToken();
         } else if (checkCategory(TipoToken.CTE_CADCHA)) {
-            printProduction("Fa", "'CTE_CADCHA'");
+            printGrammar("Fa", "'CTE_CADCHA'");
             System.out.println(token);
             setNextToken();
         }
@@ -754,7 +754,7 @@ public class OniclaSintatico {
 
     public void idFunctionCall() {
         if (checkCategory(TipoToken.ID)) {
-            printProduction("IdFunctionCall", "'id' IdFunctionCall_LL");
+            printGrammar("IdFunctionCall", "'id' IdFunctionCall_LL");
             System.out.println(token);
             setNextToken();
             idFunctionCall_LL();
@@ -763,7 +763,7 @@ public class OniclaSintatico {
 
     public void idFunctionCall_LL() {
         if (checkCategory(TipoToken.AB_PAR)) {
-            printProduction("IdFunctionCall_LL", "'(' ParamFunction ')'");
+            printGrammar("IdFunctionCall_LL", "'(' ParamFunction ')'");
             System.out.println(token);
             setNextToken();
             paramFunction();
@@ -772,7 +772,7 @@ public class OniclaSintatico {
                 setNextToken();
             }
         } else if (checkCategory(TipoToken.AB_COL)) {
-            printProduction("IdFunctionCall_LL", "'[' Ea ']'");
+            printGrammar("IdFunctionCall_LL", "'[' Ea ']'");
             System.out.println(token);
             setNextToken();
             fEa();
@@ -781,7 +781,7 @@ public class OniclaSintatico {
                 setNextToken();
             }
         } else {
-            printProduction("IdFunctionCall_LL", epsilon);
+            printGrammar("IdFunctionCall_LL", epsilon);
         }
     }
 }
