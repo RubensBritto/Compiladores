@@ -1,4 +1,4 @@
-# Compiladores - Analisador Léxico Liguagem Onicla
+# Compiladores - Analisador Léxico e Sintático Liguagem Onicla
 
 ## Execução do Analisador no Ubuntu
 
